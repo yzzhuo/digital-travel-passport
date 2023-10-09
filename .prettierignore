@@ -1,0 +1,11 @@
+node_modules
+.DS_Store
+dist
+dist-ssr
+*.local
+node_modules/*
+.eslintrc.js
+.prettierrc.js
+.vscode/settings.json
+package-lock.json
+package.json
