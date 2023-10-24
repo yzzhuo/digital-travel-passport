@@ -1,37 +1,35 @@
-import './App.css'
+import { useAuth0 } from '@auth0/auth0-react'
+import { Route, Routes } from 'react-router-dom'
+import { PageLoading } from './component/PageLoader'
+import { AuthenticationGuard } from './component/AuthenticationGuard'
+import { ProfilePage } from './page/ProfilePage'
+import AttractionList from './page/AttractionList'
+import AttractionDetail from './page/AttractionDetail'
+import { CallbackPage } from './page/CallbackPage'
+import { NotFoundPage } from './page/NotFound'
 
-import { useState } from 'react'
+export const App = () => {
+  const { isLoading } = useAuth0()
 
-import viteLogo from '/vite.svg'
+  if (isLoading) {
+    return (
+      <div className='page-layout'>
+        <PageLoading />
+      </div>
+    )
+  }
 
-import reactLogo from './assets/react.svg'
-
-function App() {
-  const [count, setCount] = useState(0)
   return (
-    <>
-      <div>
-        <a href='https://vitejs.dev' target='_blank' rel='noreferrer'>
-          <img src={viteLogo} className='logo' alt='Vite logo' />
-        </a>
-        <a href='https://react.dev' target='_blank' rel='noreferrer'>
-          <img src={reactLogo} className='logo react' alt='React logo' />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className='card'>
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className='read-the-docs'>
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Routes>
+      <Route path='/' element={<AttractionList />} />
+      <Route
+        path='/profile'
+        element={<AuthenticationGuard component={ProfilePage} />}
+      />
+      <Route path='/place/:placeId' element={<AttractionDetail />} />
+      <Route path='/public' element={<AttractionList />} />
+      <Route path='/callback' element={<CallbackPage />} />
+      <Route path='*' element={<NotFoundPage />} />
+    </Routes>
   )
 }
-
-export default App
