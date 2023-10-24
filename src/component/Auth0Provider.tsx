@@ -17,11 +17,16 @@ export const Auth0ProviderWithNavigate = ({
     navigate(appState?.returnTo || window.location.pathname)
   }
 
+  if (!REACT_APP_AUTH0_CLIENT_ID || !REACT_APP_AUTH0_DOMAIN || !REDIRECT_URL) {
+    return <div>Missing Auth0 env variables</div>
+  }
   return (
     <Auth0Provider
       domain={REACT_APP_AUTH0_DOMAIN}
       clientId={REACT_APP_AUTH0_CLIENT_ID}
-      redirectUri={REDIRECT_URL}
+      authorizationParams={{
+        redirect_uri: REDIRECT_URL,
+      }}
       onRedirectCallback={onRedirectCallback}
     >
       {children}
