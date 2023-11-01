@@ -38,7 +38,7 @@ export const fetchPlaceList = async () => {
   }
 }
 
-export const fetchPlaceDetail = async (placeId: number) => {
+export const fetchPlaceDetail = async (placeId: string) => {
   try {
     const data = await axios.get(`${API_URL}/place/${placeId}`)
     return data.data
