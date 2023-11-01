@@ -36,8 +36,58 @@ export default function AttractionDetail() {
                 </div>
               </div>
             </article>
-            <div>
-              <button className='btn btn-link'>Look at other's review</button>
+            <div className='divider'></div>
+            <div tabIndex={0} className='collapse-arrow collapse'>
+              <div className='collapse-title pl-0 font-medium'>
+                Look at other review{' '}
+              </div>
+              <div className='collapse-content'>
+                <div>
+                  <div className='flex'>
+                    <div className='avatar mr-6'>
+                      <div className='mask mask-squircle h-12 w-12'>
+                        <img
+                          src='https://daisyui.com/tailwind-css-component-profile-2@56w.png'
+                          alt='Avatar Tailwind CSS Component'
+                        />
+                      </div>
+                    </div>
+                    <div className='mr-6'>
+                      <div className='font-bold'>Hart Hagerty</div>
+                      <div className='text-sm opacity-50'>United States</div>
+                    </div>
+                  </div>
+                  <p className='ml-0 mt-2'>
+                    As a traveler, I had the pleasure of visiting the Helsinki
+                    Cathedral, and it truly left an indelible mark on my journey
+                    through Finland's capital city. This architectural
+                    masterpiece, perched atop a majestic flight of stairs..
+                  </p>
+                </div>
+
+                <div className='mt-4'>
+                  <div className='flex '>
+                    <div className='avatar mr-6'>
+                      <div className='mask mask-squircle h-12 w-12'>
+                        <img
+                          src='https://daisyui.com/tailwind-css-component-profile-2@56w.png'
+                          alt='Avatar Tailwind CSS Component'
+                        />
+                      </div>
+                    </div>
+                    <div className='mr-6'>
+                      <div className='font-bold'>Hart Hagerty</div>
+                      <div className='text-sm opacity-50'>United States</div>
+                    </div>
+                  </div>
+                  <p className='ml-0 mt-2'>
+                    As a traveler, I had the pleasure of visiting the Helsinki
+                    Cathedral, and it truly left an indelible mark on my journey
+                    through Finland's capital city. This architectural
+                    masterpiece, perched atop a majestic flight of stairs..
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -7,6 +7,7 @@ import AttractionList from './page/AttractionList'
 import AttractionDetail from './page/AttractionDetail'
 import { CallbackPage } from './page/CallbackPage'
 import { NotFoundPage } from './page/NotFound'
+import { StampPage } from './page/StampPage'
 
 export const App = () => {
   const { isLoading } = useAuth0()
@@ -28,6 +29,7 @@ export const App = () => {
       />
       <Route path='/place/:placeId' element={<AttractionDetail />} />
       <Route path='/public' element={<AttractionList />} />
+      <Route path='/stamp' element={<StampPage />} />
       <Route path='/callback' element={<CallbackPage />} />
       <Route path='*' element={<NotFoundPage />} />
     </Routes>

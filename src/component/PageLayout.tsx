@@ -8,7 +8,7 @@ export const PageLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className='h-screen'>
-      <div className='navbar shadow-md'>
+      <div className='navbar sticky top-0 bg-white shadow-md'>
         <div className='navbar-start'>
           <div className='dropdown'>
             <label className='btn btn-ghost lg:hidden'>
