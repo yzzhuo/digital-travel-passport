@@ -36,7 +36,9 @@ export const PageLayout = ({ children }: { children: React.ReactNode }) => {
               </li>
             </ul>
           </div>
-          <a className='btn btn-ghost text-xl normal-case'>daisyUI</a>
+          <a className='btn btn-ghost text-xl normal-case'>
+            Digital travel passport
+          </a>
         </div>
         <div className='navbar-center hidden lg:flex'>
           <ul className='menu menu-horizontal px-1'>
