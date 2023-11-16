@@ -29,7 +29,7 @@ export default function AttractionList() {
       {loading ? (
         <PageLoading />
       ) : (
-        <div className='container '>
+        <div className='container pb-20'>
           <article className='prose mt-6'>
             <h2>Places to go</h2>
           </article>

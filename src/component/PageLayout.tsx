@@ -2,13 +2,19 @@ import { useAuth0 } from '@auth0/auth0-react'
 import { PageFooter } from './PageFooter'
 import { LoginButton } from './LoginButton'
 import { LogoutButton } from './LogoutButton'
+import {
+  UserIcon,
+  MapIcon,
+  DeviceTabletIcon,
+} from '@heroicons/react/24/outline'
+import { Link } from 'react-router-dom'
 
 export const PageLayout = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth0()
 
   return (
     <div className='h-screen'>
-      <div className='navbar sticky top-0 bg-white shadow-md'>
+      {/* <div className='navbar sticky top-0 bg-white shadow-md'>
         <div className='navbar-start'>
           <div className='dropdown'>
             <label className='btn btn-ghost lg:hidden'>
@@ -77,9 +83,28 @@ export const PageLayout = ({ children }: { children: React.ReactNode }) => {
             <LoginButton />
           )}
         </div>
+      </div> */}
+      <div className=''>{children}</div>
+      <div className='border-top-solid btm-nav border-t-2 border-gray-100 shadow-sm'>
+        <button>
+          <MapIcon className='h-5 w-5' />
+          <Link to='/place'>
+            <span className='btm-nav-label'>Discovery</span>
+          </Link>
+        </button>
+        <button className='active'>
+          <Link to='/passport'>
+            <DeviceTabletIcon className='h-5 w-5' />
+          </Link>
+          <span className='btm-nav-label'>Passport</span>
+        </button>
+        <button>
+          <Link to='/profile'>
+            <UserIcon className='h-5 w-5' />
+          </Link>
+          <span className='btm-nav-label'>Profile</span>
+        </button>
       </div>
-      <div className='h-full'>{children}</div>
-      <PageFooter />
     </div>
   )
 }

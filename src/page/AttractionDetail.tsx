@@ -3,7 +3,11 @@ import { PlaceInfo, fetchPlaceDetail } from '../api/place'
 import { PageLayout } from '../component/PageLayout'
 import { PageLoading } from '../component/PageLoader'
 import { useParams } from 'react-router-dom'
-import { MapPinIcon, CurrencyEuroIcon } from '@heroicons/react/24/solid'
+import {
+  MapPinIcon,
+  CurrencyEuroIcon,
+  ArrowLeftIcon,
+} from '@heroicons/react/24/solid'
 import StampBtnIcon from '../assets/stamp_button_icon.svg'
 import { Link } from 'react-router-dom'
 
@@ -29,10 +33,11 @@ export default function AttractionDetail() {
               className='btn btn-circle btn-primary fixed bottom-4 right-12 cursor-pointer bg-center bg-no-repeat text-white'
             ></button>
           </Link>
-          <div className='w-full'>
+          <div className='relative w-full'>
+            <ArrowLeftIcon className='absolute left-4 top-4 h-5 w-5 text-white' />
             <img src={placeDetail.photo} className='h-80 w-full' />
           </div>
-          <div className='container'>
+          <div className='container mb-24'>
             <article className='prose mt-6'>
               <h3 className='mb-0'>{placeDetail.name}</h3>
               <p className='mt-0'>{placeDetail.description}</p>

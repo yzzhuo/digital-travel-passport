@@ -24,7 +24,7 @@ export const App = () => {
 
   return (
     <Routes>
-      <Route path='/' element={<AttractionList />} />
+      <Route path='/place' element={<AttractionList />} />
       <Route
         path='/profile'
         element={<AuthenticationGuard component={ProfilePage} />}
