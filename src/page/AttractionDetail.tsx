@@ -34,7 +34,9 @@ export default function AttractionDetail() {
             ></button>
           </Link>
           <div className='relative w-full'>
-            <ArrowLeftIcon className='absolute left-4 top-4 h-5 w-5 text-white' />
+            <Link to='/place'>
+              <ArrowLeftIcon className='absolute left-4 top-4 h-5 w-5 text-white' />
+            </Link>
             <img src={placeDetail.photo} className='h-80 w-full' />
           </div>
           <div className='container mb-24'>
@@ -81,7 +83,6 @@ export default function AttractionDetail() {
                     masterpiece, perched atop a majestic flight of stairs..
                   </p>
                 </div>
-
                 <div className='mt-4'>
                   <div className='flex '>
                     <div className='avatar mr-6'>
