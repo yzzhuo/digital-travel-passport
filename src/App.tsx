@@ -5,6 +5,7 @@ import { AuthenticationGuard } from './component/AuthenticationGuard'
 import { ProfilePage } from './page/ProfilePage'
 import AttractionList from './page/AttractionList'
 import AttractionDetail from './page/AttractionDetail'
+import Passport from './page/Passport'
 import { CallbackPage } from './page/CallbackPage'
 import { NotFoundPage } from './page/NotFound'
 import { StampPage } from './page/StampPage'
@@ -32,6 +33,7 @@ export const App = () => {
       <Route path='/public' element={<AttractionList />} />
       <Route path='/stamp' element={<StampPage />} />
       <Route path='/stamp/edit' element={<EditReviewPage />} />
+      <Route path='/passport' element={<Passport />} />
       <Route path='/callback' element={<CallbackPage />} />
       <Route path='*' element={<NotFoundPage />} />
     </Routes>

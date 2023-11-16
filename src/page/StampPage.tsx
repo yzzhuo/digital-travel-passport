@@ -1,5 +1,5 @@
 import { PageLayout } from '../component/PageLayout'
-import { MapPinIcon } from '@heroicons/react/24/solid'
+import { MapPinIcon, CalendarDaysIcon } from '@heroicons/react/24/solid'
 import Lottie from 'lottie-react'
 import stampAnimation from '../assets/stamp.json'
 import { useState } from 'react'

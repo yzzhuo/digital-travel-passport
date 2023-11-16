@@ -4,6 +4,8 @@ import { PageLayout } from '../component/PageLayout'
 import { PageLoading } from '../component/PageLoader'
 import { useParams } from 'react-router-dom'
 import { MapPinIcon, CurrencyEuroIcon } from '@heroicons/react/24/solid'
+import StampBtnIcon from '../assets/stamp_button_icon.svg'
+import { Link } from 'react-router-dom'
 
 export default function AttractionDetail() {
   const { placeId } = useParams()
@@ -13,12 +15,22 @@ export default function AttractionDetail() {
       setPlaceDetail(data)
     })
   }, [placeId])
+
   return (
     <PageLayout>
       {placeDetail ? (
-        <div>
+        <div className='relative'>
+          <Link to='/stamp'>
+            <button
+              style={{
+                backgroundImage: `url(${StampBtnIcon})`,
+                backgroundSize: '24px',
+              }}
+              className='btn btn-circle btn-primary fixed bottom-4 right-12 cursor-pointer bg-center bg-no-repeat text-white'
+            ></button>
+          </Link>
           <div className='w-full'>
-            <img src={placeDetail.photo_url} className='h-80 w-full' />
+            <img src={placeDetail.photo} className='h-80 w-full' />
           </div>
           <div className='container'>
             <article className='prose mt-6'>

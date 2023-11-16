@@ -15,7 +15,7 @@ export interface PlaceInfo {
   location_lat: string
   location_lon: string
   region: Region
-  photo_url: string
+  photo: string
 }
 export interface Category {
   id: number

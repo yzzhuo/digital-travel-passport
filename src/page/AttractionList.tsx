@@ -140,7 +140,7 @@ export default function AttractionList() {
                   className='card mx-auto mt-4 border-2 border-gray-200 shadow'
                 >
                   <figure className='h-48'>
-                    <img src={place.photo_url} alt={place.name} />
+                    <img src={place.photo} alt={place.name} />
                   </figure>
                   <div className='card-body'>
                     <h2 className='card-title'>{place.name}</h2>
