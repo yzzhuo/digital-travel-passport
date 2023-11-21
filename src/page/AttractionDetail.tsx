@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { PlaceInfo, fetchPlaceDetail } from '../api/place'
+import { fetchPlaceDetail } from '../services/place.service'
+import { type PlaceInfo } from '../models/place'
 import { PageLayout } from '../component/PageLayout'
 import { PageLoading } from '../component/PageLoader'
 import { useParams } from 'react-router-dom'
@@ -15,8 +16,10 @@ export default function AttractionDetail() {
   const { placeId } = useParams()
   const [placeDetail, setPlaceDetail] = useState<PlaceInfo | null>(null)
   useEffect(() => {
-    fetchPlaceDetail(placeId).then((data: PlaceInfo) => {
-      setPlaceDetail(data)
+    fetchPlaceDetail(placeId).then((data) => {
+      if (!data.error) {
+        setPlaceDetail(data.data)
+      }
     })
   }, [placeId])
 

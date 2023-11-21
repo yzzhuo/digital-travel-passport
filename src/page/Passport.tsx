@@ -4,7 +4,7 @@ import { motion, LayoutGroup } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { MapPinIcon, CalendarDaysIcon } from '@heroicons/react/24/solid'
 import { PageLayout } from '../component/PageLayout'
-import { fetchStamps } from '../api/place'
+import { fetchStamps } from '../services/place.service'
 
 interface Stamp {
   id: number

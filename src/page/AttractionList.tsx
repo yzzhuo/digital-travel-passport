@@ -1,7 +1,7 @@
 import { AdjustmentsHorizontalIcon, XMarkIcon } from '@heroicons/react/24/solid'
-import { fetchPlaceList } from '../api/place'
+import { fetchPlaceList } from '../services/place.service'
 import { useEffect, useState } from 'react'
-import { type PlaceListResult, type PlaceInfo } from '../api/place'
+import { type PlaceListResult, type PlaceInfo } from '../models/place'
 import { Link } from 'react-router-dom'
 import { PageLayout } from '../component/PageLayout'
 import { PageLoading } from '../component/PageLoader'
@@ -10,9 +10,11 @@ export default function AttractionList() {
   const [loading, setLoading] = useState<boolean>(true)
   const [places, setPlaces] = useState<PlaceInfo[]>([])
   useEffect(() => {
-    fetchPlaceList().then((data: PlaceListResult) => {
+    fetchPlaceList().then((data) => {
+      if (!data.error) {
+        setPlaces(data.data.results)
+      }
       setLoading(false)
-      setPlaces(data.results)
     })
   }, [])
 
