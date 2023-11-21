@@ -1,10 +1,13 @@
 export const IS_PROD = process.env.NODE_ENV === 'production'
 export const REACT_APP_AUTH0_DOMAIN = process.env.REACT_APP_AUTH0_DOMAIN
 export const REACT_APP_AUTH0_CLIENT_ID = process.env.REACT_APP_AUTH0_CLIENT_ID
-export const API_URL = 'https://digital-passport.vercel.app'
+
+console.log('REACT_APP_AUTH0_DOMAIN', REACT_APP_AUTH0_DOMAIN)
+// export const API_URL = 'https://digital-passport.vercel.app'
+export const API_URL = 'http://127.0.0.1:8000'
 // process.env.NODE_ENV === 'production'
 //   ? 'https://digital-passport.vercel.api'
-//   : 'http://127.0.0.1:8000/api'
+//   : 'http://127.0.0.1:8000'
 
 export const REDIRECT_URL =
   process.env.REACT_APP_VERCEL_ENV === 'production'

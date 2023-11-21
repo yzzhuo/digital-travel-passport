@@ -1,9 +1,10 @@
 import Bg from '../assets/passport_bg.jpg'
 import Stamp from '../assets/stamp.svg'
 import { motion, LayoutGroup } from 'framer-motion'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { MapPinIcon, CalendarDaysIcon } from '@heroicons/react/24/solid'
 import { PageLayout } from '../component/PageLayout'
+import { fetchStamps } from '../api/place'
 
 interface Stamp {
   id: number
@@ -17,6 +18,9 @@ export default function Passport() {
   const [stamps, setStamps] = useState<Stamp[]>([])
   const [currentPage, setCurrentPage] = useState<number>(0)
 
+  useEffect(() => {
+    fetchStamps()
+  }, [])
   return (
     <PageLayout>
       <div className='p-6 '>

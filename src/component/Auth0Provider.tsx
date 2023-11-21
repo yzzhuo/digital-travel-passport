@@ -25,7 +25,7 @@ export const Auth0ProviderWithNavigate = ({
       domain={REACT_APP_AUTH0_DOMAIN}
       clientId={REACT_APP_AUTH0_CLIENT_ID}
       authorizationParams={{
-        redirect_uri: REDIRECT_URL,
+        redirect_uri: window.location.origin + '/callback',
       }}
       onRedirectCallback={onRedirectCallback}
     >

@@ -47,3 +47,14 @@ export const fetchPlaceDetail = async (placeId: string) => {
     throw err
   }
 }
+
+export const fetchStamps = async () => {
+  try {
+    const data = await axios.get(`${API_URL}/stamp`)
+    console.log(data)
+    return data.data
+  } catch (err: any) {
+    console.error(err.message)
+    throw err
+  }
+}

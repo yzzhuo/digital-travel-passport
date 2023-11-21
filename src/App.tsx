@@ -1,5 +1,5 @@
 import { useAuth0 } from '@auth0/auth0-react'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { PageLoading } from './component/PageLoader'
 import { AuthenticationGuard } from './component/AuthenticationGuard'
 import { ProfilePage } from './page/ProfilePage'
@@ -21,9 +21,11 @@ export const App = () => {
       </div>
     )
   }
+  const DefaultNavigate = <Navigate to='/place' />
 
   return (
     <Routes>
+      <Route path='/' element={DefaultNavigate} />
       <Route path='/place' element={<AttractionList />} />
       <Route
         path='/profile'

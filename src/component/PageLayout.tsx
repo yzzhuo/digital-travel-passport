@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
-import { PageFooter } from './PageFooter'
-import { LoginButton } from './LoginButton'
-import { LogoutButton } from './LogoutButton'
+import { useLocation } from 'react-router-dom'
+import axios from 'axios'
+
 import {
   UserIcon,
   MapIcon,
@@ -9,100 +10,69 @@ import {
 } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom'
 
+enum Path {
+  Discovery = '/place',
+  Passport = '/passport',
+  Profile = '/profile',
+}
+
 export const PageLayout = ({ children }: { children: React.ReactNode }) => {
-  const { user } = useAuth0()
+  const [active, setActive] = useState(Path.Discovery)
+  const { user, getAccessTokenSilently } = useAuth0()
+
+  const location = useLocation()
+  const currentPath = location.pathname
+
+  const getAccessToken = async () => {}
+
+  useEffect(() => {
+    getAccessToken()
+  }, [getAccessTokenSilently, user?.sub])
+  useEffect(() => {
+    const prefixPath = `/${currentPath.split('/')[1]}`
+    switch (prefixPath) {
+      case Path.Discovery:
+        setActive(Path.Discovery)
+        break
+      case Path.Passport:
+        setActive(Path.Passport)
+        break
+      case Path.Profile:
+        setActive(Path.Profile)
+        break
+    }
+  })
 
   return (
     <div className='h-screen'>
-      {/* <div className='navbar sticky top-0 bg-white shadow-md'>
-        <div className='navbar-start'>
-          <div className='dropdown'>
-            <label className='btn btn-ghost lg:hidden'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                className='h-5 w-5'
-                fill='none'
-                viewBox='0 0 24 24'
-                stroke='currentColor'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth='2'
-                  d='M4 6h16M4 12h8m-8 6h16'
-                />
-              </svg>
-            </label>
-            <ul className='menu dropdown-content rounded-box menu-sm z-[1] mt-3 w-52 bg-base-100 p-2 shadow'>
-              <li>
-                <a>Discover</a>
-              </li>
-              <li>
-                <a>Passport</a>
-              </li>
-            </ul>
-          </div>
-          <a className='btn btn-ghost text-xl normal-case'>
-            Digital travel passport
-          </a>
-        </div>
-        <div className='navbar-center hidden lg:flex'>
-          <ul className='menu menu-horizontal px-1'>
-            <li>
-              <a>Discover</a>
-            </li>
-            <li>
-              <a>Passport</a>
-            </li>
-          </ul>
-        </div>
-        <div className='navbar-end'>
-          {user ? (
-            <div className='dropdown dropdown-end'>
-              <label tabIndex={0} className='avatar btn btn-circle btn-ghost'>
-                <div className='w-10 rounded-full'>
-                  <img src={user.picture} />
-                </div>
-              </label>
-              <ul
-                tabIndex={0}
-                className='menu dropdown-content rounded-box menu-sm z-[1] mt-3 w-52 bg-base-100 p-2 shadow'
-              >
-                <li>
-                  <a className='justify-between'>Profile</a>
-                </li>
-                <li>
-                  <a>Settings</a>
-                </li>
-                <li>
-                  <LogoutButton />
-                </li>
-              </ul>
-            </div>
-          ) : (
-            <LoginButton />
-          )}
-        </div>
-      </div> */}
       <div className=''>{children}</div>
       <div className='border-top-solid btm-nav border-t-2 border-gray-100 shadow-sm'>
-        <button>
-          <MapIcon className='h-5 w-5' />
-          <Link to='/place'>
+        <button className={`${active === Path.Discovery ? 'active' : ''} `}>
+          <Link
+            to='/place'
+            className='flex flex-col items-center justify-center'
+          >
+            <MapIcon className='h-5 w-5' />
             <span className='btm-nav-label'>Discovery</span>
           </Link>
         </button>
-        <button className='active'>
-          <Link to='/passport'>
+        <button className={`${active === Path.Passport ? 'active' : ''} `}>
+          <Link
+            to='/passport'
+            className='flex flex-col items-center justify-center'
+          >
             <DeviceTabletIcon className='h-5 w-5' />
+            <span className='btm-nav-label'>Passport</span>
           </Link>
-          <span className='btm-nav-label'>Passport</span>
         </button>
-        <button>
-          <Link to='/profile'>
+        <button className={`${active === Path.Profile ? 'active' : ''} `}>
+          <Link
+            to='/profile'
+            className='flex flex-col items-center justify-center'
+          >
             <UserIcon className='h-5 w-5' />
+            <span className='btm-nav-label'>Profile</span>
           </Link>
-          <span className='btm-nav-label'>Profile</span>
         </button>
       </div>
     </div>

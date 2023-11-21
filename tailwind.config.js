@@ -13,7 +13,7 @@ export default {
     extend: {},
   },
   daisyui: {
-    themes: ['winter'],
+    themes: ['emerald'],
   },
   plugins: [typography, daisyui, forms],
 }
