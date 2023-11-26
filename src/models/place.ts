@@ -1,9 +1,9 @@
 export interface PlaceListResult {
   count: number
-  results: PlaceInfo[]
+  results: Place[]
 }
 
-export interface PlaceInfo {
+export interface Place {
   id: number
   name: string
   category: Category
@@ -13,6 +13,7 @@ export interface PlaceInfo {
   location_lon: string
   region: Region
   photo: string
+  url: string
 }
 export interface Category {
   id: number

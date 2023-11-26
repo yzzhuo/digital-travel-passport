@@ -1,14 +1,15 @@
 import { AdjustmentsHorizontalIcon, XMarkIcon } from '@heroicons/react/24/solid'
-import { fetchPlaceList } from '../services/place.service'
+import { fetchPlaceList } from '../services/api'
 import { useEffect, useState } from 'react'
-import { type PlaceListResult, type PlaceInfo } from '../models/place'
+import { type Place } from '../models/place'
 import { Link } from 'react-router-dom'
 import { PageLayout } from '../component/PageLayout'
 import { PageLoading } from '../component/PageLoader'
+import Empty from '../assets/empty.png'
 
 export default function AttractionList() {
   const [loading, setLoading] = useState<boolean>(true)
-  const [places, setPlaces] = useState<PlaceInfo[]>([])
+  const [places, setPlaces] = useState<Place[]>([])
   useEffect(() => {
     fetchPlaceList().then((data) => {
       if (!data.error) {
@@ -130,27 +131,36 @@ export default function AttractionList() {
             </div>
           </div>
           <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
-            {places.map((place) => (
-              <Link
-                key={place.name}
-                to={`/place/${place.id}`}
-                className='w-full'
-              >
-                <div
+            {places.length ? (
+              places.map((place) => (
+                <Link
                   key={place.name}
-                  onClick={handleClickPlace}
-                  className='card mx-auto mt-4 border-2 border-gray-200 shadow'
+                  to={`/place/${place.id}`}
+                  className='w-full'
                 >
-                  <figure className='h-48'>
-                    <img src={place.photo} alt={place.name} />
-                  </figure>
-                  <div className='card-body'>
-                    <h2 className='card-title'>{place.name}</h2>
-                    <p>{place.region.name}</p>
+                  <div
+                    key={place.name}
+                    onClick={handleClickPlace}
+                    className='card mx-auto mt-4 border-2 border-gray-200 shadow'
+                  >
+                    <figure className='h-48'>
+                      <img src={place.photo} alt={place.name} />
+                    </figure>
+                    <div className='card-body'>
+                      <h2 className='card-title'>{place.name}</h2>
+                      <p>{place.region.name}</p>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              ))
+            ) : (
+              <div>
+                <img src={Empty} alt='bg' className='background-contain' />
+                <p className='text-center text-xl font-bold'>
+                  Ops, no place found.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       )}

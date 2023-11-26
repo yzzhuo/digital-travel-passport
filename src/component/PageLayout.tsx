@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useAuth0 } from '@auth0/auth0-react'
 import { useLocation } from 'react-router-dom'
-import axios from 'axios'
 
 import {
   UserIcon,
@@ -18,16 +16,8 @@ enum Path {
 
 export const PageLayout = ({ children }: { children: React.ReactNode }) => {
   const [active, setActive] = useState(Path.Discovery)
-  const { user, getAccessTokenSilently } = useAuth0()
-
   const location = useLocation()
   const currentPath = location.pathname
-
-  const getAccessToken = async () => {}
-
-  useEffect(() => {
-    getAccessToken()
-  }, [getAccessTokenSilently, user?.sub])
   useEffect(() => {
     const prefixPath = `/${currentPath.split('/')[1]}`
     switch (prefixPath) {
@@ -45,7 +35,7 @@ export const PageLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className='h-screen'>
-      <div className=''>{children}</div>
+      <div className='h-full'>{children}</div>
       <div className='border-top-solid btm-nav border-t-2 border-gray-100 shadow-sm'>
         <button className={`${active === Path.Discovery ? 'active' : ''} `}>
           <Link
