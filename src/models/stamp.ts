@@ -8,6 +8,8 @@ export interface Stamp {
   time_of_visit: string
   notes: string
   rating: number
+  // TODO: add photos
+  photos: string[]
 }
 
 export interface StampPostData {

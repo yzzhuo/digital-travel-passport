@@ -57,6 +57,29 @@ export const saveStamp = async (
   }
 }
 
+export const updateStamp = async (
+  accessToken: string,
+  stampId: string,
+  data: Partial<StampPostData>,
+): Promise<ApiResponse> => {
+  const config: AxiosRequestConfig = {
+    url: `${apiServerUrl}/stamp/${stampId}/`,
+    method: 'PATCH',
+    headers: {
+      'content-type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+    data,
+  }
+  const { data: responseData, error } = (await callExternalApi({
+    config,
+  })) as ApiResponse
+  return {
+    data: responseData,
+    error,
+  }
+}
+
 export const fetchStamps = async (
   accessToken: string,
 ): Promise<ApiResponse> => {

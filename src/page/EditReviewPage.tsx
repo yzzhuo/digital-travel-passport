@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
 import { PageLayout } from '../component/PageLayout'
-import { fetchPlaceDetail, saveStamp } from '../services/api'
+import { fetchPlaceDetail, saveStamp, updateStamp } from '../services/api'
 import {
   CalendarDaysIcon,
   UserGroupIcon,
@@ -48,10 +48,23 @@ export const EditReviewPage = () => {
     })
   }, [placeId])
 
-  const handleStamp = () => {
+  const handleStamp = async () => {
+    if (!user) {
+      alert('Please login to save stamp')
+      return
+    }
+    const accessToken = await getAccessTokenSilently()
+    const data = await saveStamp(accessToken, {
+      place: placeDetail.url,
+      time_of_visit: dayjs(formData.time_of_visit).toISOString(),
+    })
+    if (data.error) {
+      alert(data.error)
+      return
+    }
     setStampDetail({
+      ...data.data,
       url: StampImg,
-      id: 1,
     })
   }
 
@@ -85,10 +98,9 @@ export const EditReviewPage = () => {
       return
     }
     const accessToken = await getAccessTokenSilently()
-    const data = await saveStamp(accessToken, {
-      place: placeDetail.url,
+    const data = await updateStamp(accessToken, stampDetail.id, {
       notes: formData.notes,
-      time_of_visit: dayjs(formData.time_of_visit).toISOString(),
+      // time_of_visit: dayjs(formData.time_of_visit).toISOString(),
       // photos: formData.photos,
       // people: formData.people,
     })

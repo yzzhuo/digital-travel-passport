@@ -9,11 +9,9 @@ import UserPic5 from '../assets/user_pic_5.jpeg'
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import {
-  MapPinIcon,
   CalendarDaysIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  ShareIcon,
 } from '@heroicons/react/24/solid'
 import { PageLayout } from '../component/PageLayout'
 import { fetchStampDetail, fetchStamps } from '../services/api'
@@ -22,7 +20,6 @@ import { useAuth0 } from '@auth0/auth0-react'
 import { type Stamp } from '../models/stamp'
 import dayjs from 'dayjs'
 
-const mockPhotos = [UserPic1, UserPic2, UserPic3, UserPic4, UserPic5]
 export default function Passport() {
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
@@ -133,9 +130,9 @@ export default function Passport() {
                   <div className='stat-value'>0</div>
                 </div>
               </div>
-              <div className='card-actions mt-16 justify-center'>
+              <div className='card-actions mt-16 flex justify-center'>
                 {stamps.length > 0 ? (
-                  <div>
+                  <div className='flex'>
                     <button
                       className='btn btn-secondary'
                       onClick={() => handleNext()}
@@ -143,7 +140,7 @@ export default function Passport() {
                       Open Passport
                     </button>
                     <button
-                      className=' btn btn-warning ml-4'
+                      className='btn btn-warning ml-4'
                       onClick={() => handleShare()}
                     >
                       Share with Friends
@@ -179,7 +176,7 @@ export default function Passport() {
               </div>
               <p className=''>{stampDetail.notes}</p>
               <div className='mt-4 grid grid-cols-3 gap-1'>
-                {mockPhotos.map((img) => {
+                {(stampDetail.photos || []).map((img) => {
                   return (
                     <div key={img} className='w-full'>
                       <img src={img} />

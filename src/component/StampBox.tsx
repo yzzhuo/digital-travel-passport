@@ -90,7 +90,7 @@ export const StampBox = ({
   return (
     <div className='mt-6 flex h-40 w-full items-center justify-center rounded-md border-4 border-dotted border-primary'>
       {!isStamping && !stampDetail && (
-        <div className='cursor-pointer' onClick={confirmStamp}>
+        <div className='cursor-pointer' onClick={onStamp}>
           Click me to get stamp!
         </div>
       )}
