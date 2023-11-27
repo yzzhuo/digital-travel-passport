@@ -14,7 +14,7 @@ export default function Review() {
           capital city. This architectural masterpiece, perched atop a majestic
           flight of stairs.
         </p>
-        <div className='flex gap-2 overflow-auto'>
+        {/* <div className='flex gap-2 overflow-auto'>
           <img
             src='https://res.cloudinary.com/digitalpassport/image/upload/v1/passport-media/Nordic_Wildlife_Reserve_ipfhyo'
             className='h-20 w-20'
@@ -47,7 +47,7 @@ export default function Review() {
             src='https://res.cloudinary.com/digitalpassport/image/upload/v1/passport-media/Nordic_Wildlife_Reserve_ipfhyo'
             className='h-20 w-20'
           />
-        </div>
+        </div> */}
       </div>
     </div>
   )

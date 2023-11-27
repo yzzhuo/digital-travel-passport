@@ -108,7 +108,7 @@ export default function Passport() {
       >
         {currentPage === 0 && !stampDetail && (
           <div
-            style={{ height: 560 }}
+            style={{ height: 568 }}
             className='card w-full bg-primary text-primary-content shadow-xl'
           >
             <div className='card-body flex flex-col'>
@@ -127,7 +127,7 @@ export default function Passport() {
                   <div className='stat-value'>0</div>
                 </div>
               </div>
-              <div className='card-actions mt-4 flex justify-center'>
+              <div className='card-actions mb-4 mt-2 flex justify-center'>
                 {stamps.length > 0 ? (
                   <div className='flex'>
                     <button
