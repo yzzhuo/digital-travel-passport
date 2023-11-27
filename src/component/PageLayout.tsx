@@ -35,7 +35,7 @@ export const PageLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className='h-screen'>
-      <div className='h-full'>{children}</div>
+      <div className='h-full overflow-auto'>{children}</div>
       <div className='border-top-solid btm-nav border-t-2 border-gray-100 shadow-sm'>
         <button className={`${active === Path.Discovery ? 'active' : ''} `}>
           <Link

@@ -5,7 +5,7 @@ import { type Place } from '../models/place'
 import { Link } from 'react-router-dom'
 import { PageLayout } from '../component/PageLayout'
 import { PageLoading } from '../component/PageLoader'
-import Empty from '../assets/empty.png'
+import NotFound from '../component/NotFound'
 
 export default function AttractionList() {
   const [loading, setLoading] = useState<boolean>(true)
@@ -155,10 +155,7 @@ export default function AttractionList() {
               ))
             ) : (
               <div>
-                <img src={Empty} alt='bg' className='background-contain' />
-                <p className='text-center text-xl font-bold'>
-                  Ops, no place found.
-                </p>
+                <NotFound> Ops, no place found.</NotFound>
               </div>
             )}
           </div>

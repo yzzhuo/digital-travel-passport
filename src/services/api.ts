@@ -91,9 +91,7 @@ export const fetchStamps = async (
       Authorization: `Bearer ${accessToken}`,
     },
   }
-
   const { data, error } = (await callExternalApi({ config })) as ApiResponse
-
   return {
     data,
     error,

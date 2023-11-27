@@ -1,13 +1,6 @@
-import Bg from '../assets/passport_bg.jpg'
-import StampImage from '../assets/stamp_sample.jpg'
-import UserPic1 from '../assets/user_pic_1.jpeg'
-import UserPic2 from '../assets/user_pic_2.jpg'
-import UserPic3 from '../assets/user_pic_3.jpeg'
-import UserPic4 from '../assets/user_pic_4.jpeg'
-import UserPic5 from '../assets/user_pic_5.jpeg'
-
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import Bg from '../assets/passport_bg.jpg'
 import {
   CalendarDaysIcon,
   ChevronLeftIcon,
@@ -19,6 +12,8 @@ import { useLocation } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 import { type Stamp } from '../models/stamp'
 import dayjs from 'dayjs'
+import MessageBadge from '../component/MessageBadge'
+import StampPhoto from '../component/StampPhoto'
 
 export default function Passport() {
   const location = useLocation()
@@ -42,6 +37,10 @@ export default function Passport() {
   useEffect(() => {
     getStamps()
   }, [])
+
+  const gotoPlacePage = () => {
+    window.location.href = '/place'
+  }
 
   const getStampDetail = async (stampId: string) => {
     const accessToken = await getAccessTokenSilently()
@@ -108,11 +107,9 @@ export default function Passport() {
         style={{ minHeight: '100%' }}
       >
         {currentPage === 0 && !stampDetail && (
-          <motion.div
-            transition={{ duration: 0.3 }}
-            animate={{ rotateY: 0 }}
-            exit={{ rotateY: '90deg' }}
-            className='card h-full w-full bg-primary text-primary-content shadow-xl'
+          <div
+            style={{ height: 560 }}
+            className='card w-full bg-primary text-primary-content shadow-xl'
           >
             <div className='card-body flex flex-col'>
               <h2 className='card-title text-3xl'>My Travel Passport</h2>
@@ -130,7 +127,7 @@ export default function Passport() {
                   <div className='stat-value'>0</div>
                 </div>
               </div>
-              <div className='card-actions mt-16 flex justify-center'>
+              <div className='card-actions mt-4 flex justify-center'>
                 {stamps.length > 0 ? (
                   <div className='flex'>
                     <button
@@ -143,36 +140,27 @@ export default function Passport() {
                       className='btn btn-warning ml-4'
                       onClick={() => handleShare()}
                     >
-                      Share with Friends
+                      Share
                     </button>
                   </div>
                 ) : (
-                  <button
-                    onClick={() => location.push('/place')}
-                    className='btn btn-secondary'
-                  >
+                  <button onClick={gotoPlacePage} className='btn btn-secondary'>
                     Start Exploring
                   </button>
                 )}
               </div>
             </div>
-          </motion.div>
+          </div>
         )}
         {stampDetail && (
-          <motion.div
-            transition={{ duration: 0.3 }}
-            className='card h-full w-full border-2 border-solid border-primary'
-            animate={{ rotateY: 0 }}
-            exit={{ rotateY: '-90deg' }}
+          <div
+            style={{ height: 560 }}
+            className='card w-full border-2 border-solid border-primary'
           >
             <div className='card-body flex flex-col'>
               <h2 className='card-title'>{stampDetail.place.name}</h2>
-              <div className='mt-1 flex w-full flex-auto justify-center border-4 border-dotted border-gray-200'>
-                <img
-                  src={StampImage}
-                  alt='bg'
-                  className='background-contain w-64'
-                />
+              <div className='mt-1  flex h-48 w-full flex-auto items-center  justify-center border-4 border-dotted border-gray-200'>
+                <StampPhoto imageUrl={stampDetail.place.photo} />
               </div>
               <p className=''>{stampDetail.notes}</p>
               <div className='mt-4 grid grid-cols-3 gap-1'>
@@ -193,7 +181,7 @@ export default function Passport() {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         )}
         {stampDetail && (
           <button
@@ -214,9 +202,7 @@ export default function Passport() {
           </button>
         )}
         {isShowBadge && (
-          <div className='badge fixed top-20 border-none bg-black p-4 text-white'>
-            Link copied. Send it to your friend now.
-          </div>
+          <MessageBadge text={' Link copied. Send it to your friend now.'} />
         )}
       </div>
     </PageLayout>

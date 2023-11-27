@@ -8,8 +8,8 @@ import AttractionDetail from './page/AttractionDetail'
 import Passport from './page/Passport'
 import { CallbackPage } from './page/CallbackPage'
 import { NotFoundPage } from './page/NotFound'
-import { StampPage } from './page/StampPage'
-import { EditReviewPage } from './page/EditReviewPage'
+import { StampPage } from './page/StampEditPage'
+
 import './App.css'
 
 export const App = () => {
@@ -28,15 +28,16 @@ export const App = () => {
     <Routes>
       <Route path='/' element={DefaultNavigate} />
       <Route path='/place' element={<AttractionList />} />
+      <Route path='/place/:placeId' element={<AttractionDetail />} />
+      <Route path='/passport' element={<Passport />} />
       <Route
         path='/profile'
         element={<AuthenticationGuard component={ProfilePage} />}
       />
-      <Route path='/place/:placeId' element={<AttractionDetail />} />
-      <Route path='/public' element={<AttractionList />} />
-      <Route path='/stamp/:placeId' element={<StampPage />} />
-      <Route path='/stamp/:placeId/edit' element={<EditReviewPage />} />
-      <Route path='/passport' element={<Passport />} />
+      <Route
+        path='/stamp/edit'
+        element={<AuthenticationGuard component={StampPage} />}
+      />
       <Route path='/callback' element={<CallbackPage />} />
       <Route path='*' element={<NotFoundPage />} />
     </Routes>

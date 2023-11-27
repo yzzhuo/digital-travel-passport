@@ -3,6 +3,9 @@ import stampAnimation from '../assets/stamp.json'
 import { useEffect, useState } from 'react'
 import { getLocation, checkDistance } from '../utils/geo'
 import { Place } from '../models/place'
+import StampPhoto from './StampPhoto'
+import { Stamp } from '../models/stamp'
+import { PageLoading } from './PageLoader'
 
 export const StampBox = ({
   placeDetail,
@@ -10,26 +13,30 @@ export const StampBox = ({
   onStamp,
 }: {
   placeDetail: Place
-  stampDetail: any
+  stampDetail: Stamp
   onStamp: () => void
 }) => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false)
   const [isStamping, setStampStatus] = useState(false)
+  const [isLoading, setLoading] = useState(false)
+
   const handleStamp = () => {
     setIsConfirmModalOpen(false)
     setStampStatus(true)
-    setTimeout(() => {
-      setStampStatus(false)
-      onStamp()
+    setTimeout(async () => {
+      try {
+        await onStamp()
+      } finally {
+        setStampStatus(false)
+      }
     }, 2000)
   }
 
   const confirmStamp = async () => {
     try {
+      setLoading(true)
       const position = await getLocation()
       const { latitude, longitude } = position.coords
-      console.log(latitude, longitude)
-      console.log(placeDetail?.location_lat, placeDetail?.location_lat)
       const inDestination = checkDistance(
         latitude,
         longitude,
@@ -44,6 +51,8 @@ export const StampBox = ({
       }
     } catch (error) {
       console.log(error)
+    } finally {
+      setLoading(false)
     }
   }
   useEffect(() => {
@@ -88,10 +97,10 @@ export const StampBox = ({
   }
 
   return (
-    <div className='mt-6 flex h-40 w-full items-center justify-center rounded-md border-4 border-dotted border-primary'>
+    <div className='mt-6 flex h-48 w-full items-center justify-center rounded-md border-4 border-dotted border-gray-200'>
       {!isStamping && !stampDetail && (
-        <div className='cursor-pointer' onClick={onStamp}>
-          Click me to get stamp!
+        <div className='cursor-pointer' onClick={confirmStamp}>
+          {!isLoading ? 'Click me to get stamp' : <PageLoading />}
         </div>
       )}
       {isStamping && (
@@ -102,10 +111,9 @@ export const StampBox = ({
         />
       )}
       {stampDetail && (
-        <div
-          className='align-center flex h-full w-full justify-center bg-contain bg-center bg-no-repeat p-4 text-center'
-          style={{ backgroundImage: `url(${stampDetail.url})` }}
-        />
+        <div className='align-center flex h-full w-full justify-center bg-contain bg-center bg-no-repeat text-center'>
+          <StampPhoto imageUrl={placeDetail.photo} />
+        </div>
       )}
       <StampModal />
     </div>

@@ -2,7 +2,7 @@ import { Place } from './place'
 
 export interface Stamp {
   url: string
-  id: number
+  id: string
   place: Place
   user: string
   time_of_visit: string
@@ -13,8 +13,7 @@ export interface Stamp {
 }
 
 export interface StampPostData {
-  place: number
-  user: string
+  place: string
   time_of_visit?: string
   notes?: string
   rating?: number

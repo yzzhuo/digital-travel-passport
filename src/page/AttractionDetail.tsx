@@ -10,6 +10,8 @@ import {
   ArrowLeftIcon,
 } from '@heroicons/react/24/solid'
 import { Link } from 'react-router-dom'
+import Map from '../component/Map'
+import Review from '../component/Review'
 
 export default function AttractionDetail() {
   const { placeId } = useParams()
@@ -24,7 +26,7 @@ export default function AttractionDetail() {
   }, [placeId])
 
   const goToStampPage = () => {
-    location.href = `/stamp/${placeId}/edit`
+    location.href = `/stamp/edit?placeid=${placeId}`
   }
   const GoBackBtn = () => {
     return (
@@ -46,17 +48,17 @@ export default function AttractionDetail() {
               <article className='prose mt-6 flex flex-col'>
                 <h3 className='mb-0'>{placeDetail.name}</h3>
                 <p className='mt-0'>{placeDetail.description}</p>
-                <div>
-                  <div className='flex items-center'>
-                    <MapPinIcon className='mr-1 h-6 w-6' />
-                    <span>{placeDetail.region.name}</span>
+                <div className='flex justify-between'>
+                  <div>
+                    <div className='flex items-center'>
+                      <MapPinIcon className='mr-1 h-6 w-6' />
+                      <span>{placeDetail.region.name}</span>
+                    </div>
+                    <div className='flex items-center'>
+                      <CurrencyEuroIcon className='mr-1 h-6 w-6' />
+                      <span>{placeDetail.admission_fee}</span>
+                    </div>
                   </div>
-                  <div className='flex items-center'>
-                    <CurrencyEuroIcon className='mr-1 h-6 w-6' />
-                    <span>{placeDetail.admission_fee}</span>
-                  </div>
-                </div>
-                <div className='self-end	'>
                   <div className='flex flex-col items-center justify-center'>
                     <button
                       onClick={goToStampPage}
@@ -81,56 +83,36 @@ export default function AttractionDetail() {
                   </div>
                 </div>
               </article>
-              <div className='divider'></div>
-              <div tabIndex={0} className='collapse-arrow collapse'>
-                <div className='collapse-title pl-0 font-medium'>
-                  Look at other review{' '}
+              <div role='tablist' className='tabs-lifted tabs mt-4'>
+                <input
+                  type='radio'
+                  name='my_tabs_2'
+                  role='tab'
+                  className='tab'
+                  aria-label='Location'
+                  checked
+                />
+                <div
+                  role='tabpanel'
+                  style={{ height: '300px' }}
+                  className='tab-content pt-2'
+                >
+                  <Map
+                    center={{
+                      lat: Number(placeDetail.location_lat),
+                      lng: Number(placeDetail.location_lon),
+                    }}
+                  />
                 </div>
-                <div className='collapse-content'>
-                  <div>
-                    <div className='flex'>
-                      <div className='avatar mr-6'>
-                        <div className='mask mask-squircle h-12 w-12'>
-                          <img
-                            src='https://daisyui.com/tailwind-css-component-profile-2@56w.png'
-                            alt='Avatar Tailwind CSS Component'
-                          />
-                        </div>
-                      </div>
-                      <div className='mr-6'>
-                        <div className='font-bold'>Hart Hagerty</div>
-                        <div className='text-sm opacity-50'>United States</div>
-                      </div>
-                    </div>
-                    <p className='ml-0 mt-2'>
-                      As a traveler, I had the pleasure of visiting the Helsinki
-                      Cathedral, and it truly left an indelible mark on my
-                      journey through Finland's capital city. This architectural
-                      masterpiece, perched atop a majestic flight of stairs..
-                    </p>
-                  </div>
-                  <div className='mt-4'>
-                    <div className='flex '>
-                      <div className='avatar mr-6'>
-                        <div className='mask mask-squircle h-12 w-12'>
-                          <img
-                            src='https://daisyui.com/tailwind-css-component-profile-2@56w.png'
-                            alt='Avatar Tailwind CSS Component'
-                          />
-                        </div>
-                      </div>
-                      <div className='mr-6'>
-                        <div className='font-bold'>Hart Hagerty</div>
-                        <div className='text-sm opacity-50'>United States</div>
-                      </div>
-                    </div>
-                    <p className='ml-0 mt-2'>
-                      As a traveler, I had the pleasure of visiting the Helsinki
-                      Cathedral, and it truly left an indelible mark on my
-                      journey through Finland's capital city. This architectural
-                      masterpiece, perched atop a majestic flight of stairs..
-                    </p>
-                  </div>
+                <input
+                  type='radio'
+                  name='my_tabs_2'
+                  role='tab'
+                  className='tab'
+                  aria-label={`Review`}
+                />
+                <div role='tabpanel' className='tab-content pt-2'>
+                  <Review />
                 </div>
               </div>
             </div>
