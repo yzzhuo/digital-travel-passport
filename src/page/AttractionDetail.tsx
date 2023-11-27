@@ -96,7 +96,7 @@ export default function AttractionDetail() {
                 <div
                   role='tabpanel'
                   style={{ height: '300px' }}
-                  className='tab-content pt-2'
+                  className='tab-content w-full pt-2'
                 >
                   <Map
                     center={{
