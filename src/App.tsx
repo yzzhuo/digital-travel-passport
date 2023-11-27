@@ -35,7 +35,7 @@ export const App = () => {
         element={<AuthenticationGuard component={ProfilePage} />}
       />
       <Route
-        path='/stamp/edit'
+        path='/stamp'
         element={<AuthenticationGuard component={StampPage} />}
       />
       <Route path='/callback' element={<CallbackPage />} />

@@ -26,7 +26,7 @@ export default function AttractionDetail() {
   }, [placeId])
 
   const goToStampPage = () => {
-    location.href = `/stamp/edit?placeid=${placeId}`
+    location.href = `/stamp?placeid=${placeId}`
   }
   const GoBackBtn = () => {
     return (
