@@ -6,12 +6,22 @@ interface Location {
   lng: number
 }
 
-const AnyReactComponent = ({ text }: { text: string }) => (
-  <div>
-    <MapPinIcon className='h-5 w-5' />
-  </div>
-)
-
+const AnyReactComponent = ({
+  text,
+}: {
+  text: string
+  lat?: number
+  lng?: number
+}) => {
+  console.log({
+    text,
+  })
+  return (
+    <div>
+      <MapPinIcon className='h-5 w-5' />
+    </div>
+  )
+}
 export default function Map({
   center,
   zoom = 11,
@@ -20,7 +30,6 @@ export default function Map({
   zoom?: number
 }) {
   const key = import.meta.env.VITE_APP_GOOGLE_MAP_API_KEY
-  console.log(key)
   return (
     <div className='h-full w-full'>
       <GoogleMap

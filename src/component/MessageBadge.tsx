@@ -11,6 +11,7 @@ export default function MessageBadge({
   text: string
   type?: MessageBadgeType
 }) {
+  console.log('type', type)
   return (
     <div className='fixed top-20 flex w-screen justify-center'>
       <div className={`badge badge-info border-none p-4`}>
