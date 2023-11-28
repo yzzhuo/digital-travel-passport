@@ -40,29 +40,33 @@ export default function Review({ stamplist }: { stamplist: StampList }) {
 
   return (
     <div className=''>
-      {stamps.map((stamp) => (
-        <div className='mt-4' key={stamp.id}>
-          <div className='flex'>
-            <div className='mr-6'>
-              <div className='font-bold'>username</div>
-              <div className='text-sm opacity-50'>
-                {dayjs(stamp.time_of_visit).format('DD/MM/YYYY HH:mm:ss')}
+      {stamps.map((stamp) => {
+        const userStr = stamp.user.split('/')
+        const userId = userStr[userStr.length - 2]
+        return (
+          <div className='mt-4' key={stamp.id}>
+            <div className='flex'>
+              <div className='mr-6'>
+                <div className='font-bold'>User {userId}</div>
+                <div className='text-sm opacity-50'>
+                  {dayjs(stamp.time_of_visit).format('DD/MM/YYYY HH:mm:ss')}
+                </div>
               </div>
             </div>
+            <p className='ml-0 mt-2'>{stamp.notes}</p>
+            <div className='flex gap-2 overflow-auto'>
+              {stamp.photos.map((photo) => (
+                <img
+                  onClick={() => setPreviewImage(photo.photo)}
+                  key={photo.id}
+                  src={photo.photo}
+                  className='h-20 w-20 cursor-pointer'
+                />
+              ))}
+            </div>
           </div>
-          <p className='ml-0 mt-2'>{stamp.notes}</p>
-          <div className='flex gap-2 overflow-auto'>
-            {stamp.photos.map((photo) => (
-              <img
-                onClick={() => setPreviewImage(photo.photo)}
-                key={photo.id}
-                src={photo.photo}
-                className='h-20 w-20 cursor-pointer'
-              />
-            ))}
-          </div>
-        </div>
-      ))}
+        )
+      })}
       {nextPage && (
         <div>
           <button

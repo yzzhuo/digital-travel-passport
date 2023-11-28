@@ -2,13 +2,16 @@ import { useRef, useState, useEffect } from 'react'
 import { PageLayout } from '../component/PageLayout'
 import {
   fetchPlaceDetail,
+  // fetchPlaceDetail,
+  fetchStampDetail,
+  fetchStamps,
   saveStamp,
   saveStampPhoto,
   updateStamp,
 } from '../services/api'
 import {
   CalendarDaysIcon,
-  UserGroupIcon,
+  // UserGroupIcon,
   PlusIcon,
 } from '@heroicons/react/24/solid'
 import { type Place } from '../models/place'
@@ -22,14 +25,16 @@ import MessageBadge, { MessageBadgeType } from '../component/MessageBadge'
 import NotFound from '../component/NotFound'
 import { StampPhotoData } from '../models/stamp'
 import ImagePreviewer from '../component/ImagePreviewer'
+import { useParams } from 'react-router-dom'
 
 interface StampFormData {
   notes: string
   time_of_visit: Date
-  people: string
+  // people: string
   stampPhotos: StampPhotoData[]
 }
 export const StampPage = () => {
+  const { stampId } = useParams()
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const placeId = queryParams.get('placeid')
@@ -43,7 +48,7 @@ export const StampPage = () => {
   const [formData, setFormData] = useState<StampFormData>({
     notes: '',
     time_of_visit: new Date(),
-    people: '',
+    // people: '',
     stampPhotos: [],
   })
 
@@ -51,6 +56,9 @@ export const StampPage = () => {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const { getAccessTokenSilently } = useAuth0()
+  useEffect(() => {
+    fetchCurrentStamp()
+  }, [stampId])
 
   useEffect(() => {
     setIsLoading(true)
@@ -68,6 +76,22 @@ export const StampPage = () => {
         })
     }
   }, [placeId])
+
+  const fetchCurrentStamp = async () => {
+    setIsLoading(true)
+    const accessToken = await getAccessTokenSilently()
+    const data = await fetchStampDetail(accessToken, stampId)
+    if (!data.error) {
+      setStampDetail(data.data)
+      setFormData({
+        notes: data.data.notes,
+        time_of_visit: new Date(data.data.time_of_visit),
+        // people: data.data.people,
+        stampPhotos: data.data.photos,
+      })
+    }
+    setIsLoading(false)
+  }
 
   const showMessage = (message: string) => {
     setMessage(message)
@@ -221,7 +245,10 @@ export const StampPage = () => {
                               className='mt-2 h-20 w-20 cursor-pointer'
                               onClick={() => setPreviewImage(photo.photo)}
                             >
-                              <img src={photo.photo} />
+                              <img
+                                src={photo.photo}
+                                className='h-full w-full object-fill'
+                              />
                             </div>
                           ))}
                           <div
@@ -257,7 +284,7 @@ export const StampPage = () => {
                           />
                           <DatePicker />
                         </div>
-                        <div className='flex items-center'>
+                        {/* <div className='flex items-center'>
                           <UserGroupIcon className='mr-1 h-6 w-6' />
                           <input
                             type='text'
@@ -270,7 +297,7 @@ export const StampPage = () => {
                             }}
                             className='input input-ghost w-full max-w-xs'
                           />
-                        </div>
+                        </div> */}
                       </div>
                     </form>
                     <div className='mt-8 flex justify-end'>

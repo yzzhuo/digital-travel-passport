@@ -24,13 +24,14 @@ export default function ImagePreviewer({
           </button>
         )}
       </div>
-      <div className='flex flex-1 items-center'>
+      <div className='flex flex-1 items-center justify-center overflow-auto'>
         <img
           src={
             previewImage ||
             'http://res.cloudinary.com/digitalpassport/image/upload/v1700916517/users/v012mttevpp5huwz1630.png'
           }
-          className='h-full w-full object-contain'
+          className='m-h-full m-w-full object-contain'
+          style={{ maxWidth: '100%', maxHeight: '100%' }}
         />
       </div>
     </div>

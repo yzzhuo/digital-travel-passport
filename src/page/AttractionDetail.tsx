@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react'
-import { fetchPlaceDetail, fetchStamps } from '../services/api'
+import {
+  fetchCurrentUser,
+  fetchPlaceDetail,
+  fetchStamps,
+} from '../services/api'
 import { type Place } from '../models/place'
 import { PageLayout } from '../component/PageLayout'
 import { PageLoading } from '../component/PageLoader'
@@ -12,13 +16,14 @@ import {
 import { Link } from 'react-router-dom'
 import Map from '../component/Map'
 import Review from '../component/Review'
-import { StampList } from '../models/stamp'
+import { Stamp, StampList } from '../models/stamp'
 import { useAuth0 } from '@auth0/auth0-react'
 
 export default function AttractionDetail() {
   const { placeId } = useParams()
   const [placeDetail, setPlaceDetail] = useState<Place | null>(null)
   const { getAccessTokenSilently } = useAuth0()
+  const [currentStamp, setCurrentStamp] = useState<Stamp | null>(null)
   const [stamps, setStamps] = useState<StampList>({
     count: 0,
     next: '',
@@ -33,13 +38,26 @@ export default function AttractionDetail() {
       }
     })
     if (placeId) {
+      // for reviews data
+      checkIfUserHasStamp()
       fetchStampsByPlace()
     }
   }, [placeId])
 
+  const checkIfUserHasStamp = async () => {
+    const accessToken = await getAccessTokenSilently()
+    const currentUser = await fetchCurrentUser(accessToken)
+    const res = await fetchStamps(accessToken, {
+      user: currentUser.data.id,
+    })
+    if (!res.error) {
+      if (res.data.results.length > 0) {
+        setCurrentStamp(res.data.results[0])
+      }
+    }
+  }
   const fetchStampsByPlace = async () => {
     const accessToken = await getAccessTokenSilently()
-    // const userRes = await fetchUser(accessToken)
     const res = await fetchStamps(accessToken, {
       place: placeId,
     })
@@ -49,7 +67,11 @@ export default function AttractionDetail() {
   }
 
   const goToStampPage = () => {
-    location.href = `/stamp?placeid=${placeId}`
+    if (currentStamp) {
+      location.href = `/stamp/${currentStamp.id}?placeid=${placeId}`
+    } else {
+      location.href = `/stamp?placeid=${placeId}`
+    }
   }
   const GoBackBtn = () => {
     return (
@@ -67,8 +89,11 @@ export default function AttractionDetail() {
         <div>
           <div className='relative'>
             <GoBackBtn />
-            <div className='container mb-24'>
-              <article className='prose mt-6 flex flex-col'>
+            <div
+              className='container mb-24 flex flex-col items-center'
+              style={{ maxWidth: '65ch' }}
+            >
+              <article className='prose mt-6 flex flex-col lg:prose-xl'>
                 <h3 className='mb-0'>{placeDetail.name}</h3>
                 <p className='mt-0'>{placeDetail.description}</p>
                 <div className='flex justify-between'>
@@ -83,10 +108,9 @@ export default function AttractionDetail() {
                     </div>
                   </div>
                   <div className='flex flex-col items-center justify-center'>
-                    <Link
-                      to={`/stamp?placeid=${placeId}`}
+                    <button
                       onClick={goToStampPage}
-                      className='btn btn-circle btn-outline btn-sm'
+                      className='btn btn-circle btn-primary btn-sm'
                     >
                       <svg
                         xmlns='http://www.w3.org/2000/svg'
@@ -102,12 +126,17 @@ export default function AttractionDetail() {
                           d='M3 3v1.5M3 21v-6m0 0l2.77-.693a9 9 0 016.208.682l.108.054a9 9 0 006.086.71l3.114-.732a48.524 48.524 0 01-.005-10.499l-3.11.732a9 9 0 01-6.085-.711l-.108-.054a9 9 0 00-6.208-.682L3 4.5M3 15V4.5'
                         />
                       </svg>
-                    </Link>
-                    <span>Stamp</span>
+                    </button>
+                    <span className='text-md mt-2 sm:text-sm'>
+                      {currentStamp ? 'Edit My ' : 'Get a '}Stamp
+                    </span>
                   </div>
                 </div>
               </article>
-              <div role='tablist' className='tabs-lifted tabs mt-4'>
+              <div
+                role='tablist'
+                className='tabs-lifted tabs mt-4 self-stretch'
+              >
                 <input
                   type='radio'
                   name='my_tabs_2'

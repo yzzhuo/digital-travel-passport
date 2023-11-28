@@ -6,26 +6,33 @@ import {
   ChevronRightIcon,
 } from '@heroicons/react/24/solid'
 import { PageLayout } from '../component/PageLayout'
-import { fetchStamps, fetchUsers } from '../services/api'
+import { fetchStamps, fetchCurrentUser } from '../services/api'
 import { useLocation } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
-import { type Stamp } from '../models/stamp'
+import { StampList } from '../models/stamp'
 import dayjs from 'dayjs'
 import MessageBadge from '../component/MessageBadge'
 import StampPhoto from '../component/StampPhoto'
 import { User } from '../models/user'
 import { PageLoading } from '../component/PageLoader'
+import ImagePreviewer from '../component/ImagePreviewer'
 
 export default function Passport() {
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const currentStampId = queryParams.get('stampid')
-  const { user, getAccessTokenSilently } = useAuth0()
-  const [stamps, setStamps] = useState<Stamp[]>([])
+  const { getAccessTokenSilently } = useAuth0()
+  const [stamps, setStamps] = useState<StampList>({
+    count: 0,
+    next: '',
+    previous: '',
+    results: [],
+  })
   const [stampIndex, setCurrentStampIndex] = useState<number>(-1)
   const [currentUser, setCurrentUser] = useState<User | null>(null)
   const [isShowBadge, setIsShowBadge] = useState<boolean>(false)
   const [isLoaded, setIsLoaded] = useState<boolean>(false)
+  const [previewImage, setPreviewImage] = useState<string>('')
 
   useEffect(() => {
     getStamps()
@@ -33,14 +40,10 @@ export default function Passport() {
 
   const getCurrentUser = async () => {
     const accessToken = await getAccessTokenSilently()
-    const data = await fetchUsers(accessToken)
+    const data = await fetchCurrentUser(accessToken)
     if (!data.error) {
-      const currentUser = data.data.results.find((item) => {
-        const formatId = user.sub.replace('|', '.')
-        return item.username === formatId
-      })
-      setCurrentUser(currentUser)
-      return currentUser
+      setCurrentUser(data.data)
+      return data.data
     } else {
       alert('Error fetching user')
     }
@@ -63,7 +66,7 @@ export default function Passport() {
       alert('Error fetching stamps')
     }
     const data = response.data
-    setStamps(data.results)
+    setStamps(data)
 
     if (currentStampId) {
       const stamp = data.results.find((stamp) => stamp.id === currentStampId)
@@ -77,9 +80,26 @@ export default function Passport() {
     setIsLoaded(true)
   }
 
-  const handleNext = () => {
-    if (stampIndex === stamps.length - 1) {
+  const handleNext = async () => {
+    if (stampIndex === stamps.count - 1) {
       return
+    }
+    if (stampIndex === stamps.results.length - 1) {
+      const accessToken = await getAccessTokenSilently()
+      const query = stamps.next
+        .split('?')[1]
+        .split('&')
+        .reduce((acc, cur) => {
+          const [key, value] = cur.split('=')
+          return { ...acc, [key]: value }
+        }, {})
+      const data = await fetchStamps(accessToken, query)
+      if (!data.error) {
+        setStamps({
+          ...data.data,
+          results: [...stamps.results, ...data.data.results],
+        })
+      }
     }
     setCurrentStampIndex(stampIndex + 1)
   }
@@ -104,7 +124,7 @@ export default function Passport() {
       {isLoaded ? (
         <div
           className='relative flex items-center justify-center p-6 pb-24'
-          style={{ minHeight: '100%' }}
+          style={{ minHeight: '100%', width: '380px', margin: '0 auto' }}
         >
           {stampIndex === -1 && (
             <div
@@ -119,7 +139,7 @@ export default function Passport() {
                 <div className='stats shadow'>
                   <div className='stat'>
                     <div className='stat-title'>Stamps</div>
-                    <div className='stat-value'>{stamps.length}</div>
+                    <div className='stat-value'>{stamps.results.length}</div>
                     {/* <div className='stat-desc'>21% more than last month</div> */}
                   </div>
                   <div className='stat'>
@@ -128,7 +148,7 @@ export default function Passport() {
                   </div>
                 </div>
                 <div className='card-actions mb-4 mt-2 flex justify-center'>
-                  {stamps.length > 0 ? (
+                  {stamps.results.length > 0 ? (
                     <div className='flex'>
                       <button
                         className='btn btn-secondary'
@@ -161,27 +181,59 @@ export default function Passport() {
               className='card w-full border-2 border-solid border-primary'
             >
               <div className='card-body flex flex-col'>
-                <h2 className='card-title'>{stamps[stampIndex].place.name}</h2>
-                <div className='mt-1  flex h-48 w-full flex-auto items-center  justify-center border-4 border-dotted border-gray-200'>
-                  <StampPhoto imageUrl={stamps[stampIndex].place.photo} />
+                <h2 className='card-title'>
+                  {stamps.results[stampIndex].place.name}
+                </h2>
+                <div
+                  style={{ height: 200 }}
+                  className='relative mt-1 flex w-full items-center justify-center border-4 border-dotted border-gray-200'
+                >
+                  <StampPhoto
+                    imageUrl={stamps.results[stampIndex].place.photo}
+                  />
                 </div>
-                <div>
-                  {stamps[stampIndex].id} -{stamps[stampIndex].notes}
-                </div>
+                {stampIndex >= 0 && (
+                  <button
+                    className='btn btn-circle absolute left-2'
+                    style={{ top: '25%' }}
+                    onClick={handlePrev}
+                  >
+                    <ChevronLeftIcon className='h-6 w-6 cursor-pointer' />
+                  </button>
+                )}
+                {stampIndex < stamps.count - 1 && stampIndex !== -1 && (
+                  <button
+                    onClick={handleNext}
+                    className='btn btn-circle absolute right-2'
+                    style={{ top: '25%' }}
+                  >
+                    <ChevronRightIcon className='h-6 w-6 cursor-pointer' />
+                  </button>
+                )}
+                <div>{stamps.results[stampIndex].notes}</div>
                 <div className='mt-4 grid grid-cols-3 gap-1'>
-                  {(stamps[stampIndex].photos || []).map((stampPhoto) => {
-                    return (
-                      <div key={stampPhoto.id} className='w-full'>
-                        <img src={stampPhoto.photo} />
-                      </div>
-                    )
-                  })}
+                  {(stamps.results[stampIndex].photos || []).map(
+                    (stampPhoto) => {
+                      return (
+                        <div
+                          key={stampPhoto.id}
+                          className='h-20 w-20'
+                          onClick={() => setPreviewImage(stampPhoto.photo)}
+                        >
+                          <img
+                            src={stampPhoto.photo}
+                            className='h-full w-full cursor-pointer object-cover'
+                          />
+                        </div>
+                      )
+                    },
+                  )}
                 </div>
-                <div className='mt-4 flex flex-col '>
-                  <div className='mt-2 flex items-center'>
+                <div className='mt-2 flex flex-col '>
+                  <div className='flex items-center'>
                     <CalendarDaysIcon className='mr-1 h-6 w-6' />
                     <span>
-                      {dayjs(stamps[stampIndex].time_of_visit).format(
+                      {dayjs(stamps.results[stampIndex].time_of_visit).format(
                         'DD/MM/YYYY',
                       )}
                     </span>
@@ -190,30 +242,18 @@ export default function Passport() {
               </div>
             </div>
           )}
-          {stampIndex >= 0 && (
-            <button
-              className='btn btn-circle absolute left-2'
-              style={{ top: '20%' }}
-              onClick={handlePrev}
-            >
-              <ChevronLeftIcon className='h-6 w-6 cursor-pointer' />
-            </button>
-          )}
-          {stampIndex < stamps.length - 1 && (
-            <button
-              onClick={handleNext}
-              className='btn btn-circle absolute right-2'
-              style={{ top: '20%' }}
-            >
-              <ChevronRightIcon className='h-6 w-6 cursor-pointer' />
-            </button>
-          )}
           {isShowBadge && (
             <MessageBadge text={' Link copied. Send it to your friend now.'} />
           )}
         </div>
       ) : (
         <PageLoading />
+      )}
+      {previewImage && (
+        <ImagePreviewer
+          previewImage={previewImage}
+          onClose={() => setPreviewImage('')}
+        />
       )}
     </PageLayout>
   )
