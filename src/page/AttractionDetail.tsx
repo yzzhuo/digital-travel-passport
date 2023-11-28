@@ -12,14 +12,19 @@ import {
 import { Link } from 'react-router-dom'
 import Map from '../component/Map'
 import Review from '../component/Review'
-import { Stamp } from '../models/stamp'
+import { StampList } from '../models/stamp'
 import { useAuth0 } from '@auth0/auth0-react'
 
 export default function AttractionDetail() {
   const { placeId } = useParams()
   const [placeDetail, setPlaceDetail] = useState<Place | null>(null)
   const { getAccessTokenSilently } = useAuth0()
-  const [stamps, setStamps] = useState<Stamp[]>([])
+  const [stamps, setStamps] = useState<StampList>({
+    count: 0,
+    next: '',
+    previous: '',
+    results: [],
+  })
 
   useEffect(() => {
     fetchPlaceDetail(placeId).then((data) => {
@@ -39,7 +44,7 @@ export default function AttractionDetail() {
       place: placeId,
     })
     if (!res.error) {
-      setStamps(res.data.results)
+      setStamps(res.data)
     }
   }
 
@@ -131,7 +136,7 @@ export default function AttractionDetail() {
                   aria-label={`Review`}
                 />
                 <div role='tabpanel' className='tab-content pt-2'>
-                  <Review stamps={stamps} />
+                  <Review stamplist={stamps} />
                 </div>
               </div>
             </div>

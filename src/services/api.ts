@@ -5,15 +5,9 @@ import { StampPostData } from '../models/stamp'
 
 const apiServerUrl = import.meta.env.VITE_APP_API_SERVER_URL
 
-export const fetchUser = async (
-  accessToken: string,
-  query?: Record<string, string>,
-) => {
-  const queryString = Object.keys(query || {})
-    .map((key) => `${key}=${query[key]}`)
-    .join('&')
+export const fetchUsers = async (accessToken: string) => {
   const config: AxiosRequestConfig = {
-    url: `${apiServerUrl}/user/?${queryString}`,
+    url: `${apiServerUrl}/user/`,
     method: 'GET',
     headers: {
       'content-type': 'application/json',

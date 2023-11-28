@@ -10,8 +10,6 @@ import {
   CalendarDaysIcon,
   UserGroupIcon,
   PlusIcon,
-  TrashIcon,
-  ChevronLeftIcon,
 } from '@heroicons/react/24/solid'
 import { type Place } from '../models/place'
 import { PageLoading } from '../component/PageLoader'
@@ -23,6 +21,7 @@ import { Link, useLocation } from 'react-router-dom'
 import MessageBadge, { MessageBadgeType } from '../component/MessageBadge'
 import NotFound from '../component/NotFound'
 import { StampPhotoData } from '../models/stamp'
+import ImagePreviewer from '../component/ImagePreviewer'
 
 interface StampFormData {
   notes: string
@@ -294,31 +293,11 @@ export const StampPage = () => {
               )}
             </div>
             {previewImage && (
-              <div className='absolute top-0 flex h-full w-full flex-col bg-black'>
-                <div className='flex w-full items-center justify-between bg-white pb-2 pt-2'>
-                  <button
-                    className='btn btn-circle btn-ghost'
-                    onClick={() => setPreviewImage(null)}
-                  >
-                    <ChevronLeftIcon className='h-6 w-6' />
-                  </button>
-                  <button
-                    className='btn btn-circle btn-ghost'
-                    onClick={() => handleDeleteImage(previewImage)}
-                  >
-                    <TrashIcon className='h-6 w-6' />
-                  </button>
-                </div>
-                <div className='flex flex-1 items-center'>
-                  <img
-                    src={
-                      previewImage ||
-                      'http://res.cloudinary.com/digitalpassport/image/upload/v1700916517/users/v012mttevpp5huwz1630.png'
-                    }
-                    className='w-full'
-                  />
-                </div>
-              </div>
+              <ImagePreviewer
+                previewImage={previewImage}
+                onClose={() => setPreviewImage(null)}
+                onDelete={handleDeleteImage}
+              />
             )}
           </div>
         ) : (

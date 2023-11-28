@@ -1,4 +1,10 @@
 import { Place } from './place'
+export interface StampList {
+  count: number
+  next: string
+  previous: string
+  results: Stamp[]
+}
 
 export interface Stamp {
   url: string
