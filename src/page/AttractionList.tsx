@@ -1,5 +1,5 @@
 import { AdjustmentsHorizontalIcon, XMarkIcon } from '@heroicons/react/24/solid'
-import { fetchPlaceList } from '../api/place'
+import { fetchPlaceList } from '../api/place' //get attraction info from api
 import { useEffect, useState } from 'react'
 import { type PlaceListResult, type PlaceInfo } from '../api/place'
 import { Link } from 'react-router-dom'
@@ -9,6 +9,16 @@ import { PageLoading } from '../component/PageLoader'
 export default function AttractionList() {
   const [loading, setLoading] = useState<boolean>(true)
   const [places, setPlaces] = useState<PlaceInfo[]>([])
+
+  // use fo search box
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const [selectedFilters, setSelectedFilters] = useState({
+    regions: [],
+    activities: [],
+    admissionFee: [],
+  });
+
   useEffect(() => {
     fetchPlaceList().then((data: PlaceListResult) => {
       setLoading(false)
@@ -22,7 +32,39 @@ export default function AttractionList() {
       dialog.showModal()
     }
   }
-  const handleClickPlace = () => {}
+
+  const handleClickPlace = () => {} // Click any attraction
+
+  // search a place
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  // new added
+  const handleCheckboxChange = (category, value) => {
+    // Update the selectedFilters state based on checkbox changes
+    setSelectedFilters((prevFilters) => ({
+      ...prevFilters,
+      [category]: prevFilters[category].includes(value)
+        ? prevFilters[category].filter((item) => item !== value)
+        : [...prevFilters[category], value],
+    }));
+  };
+
+  // click clear button
+  const handleClear = () => {
+    setSelectedFilters({
+      regions: [],
+      activities: [],
+      admissionFee: [],
+    });
+    // for track changes
+    // console.log(selectedFilters);
+  } // Click clear button
+
+  // click save button
+  function handleSave() { // to froneend    
+  } // Click save button
 
   return (
     <PageLayout>
@@ -38,18 +80,24 @@ export default function AttractionList() {
               type='text'
               placeholder='Search a place'
               className='input input-bordered w-full flex-1'
+              value={searchTerm}
+              onChange={handleSearchChange}
             />
             <div className='dropdown'>
+
               <button
                 onClick={handleOpenFilter}
                 className='btn btn-square ml-2'
               >
                 <AdjustmentsHorizontalIcon className='primary h-6 w-6' />
               </button>
+
               <dialog id='my_modal_1' className='modal'>
+
                 <div className='modal-box'>
+
                   <div className='flex'>
-                    <h3 className='flex-1 text-lg font-bold'>Filter</h3>
+                    <h3 className='flex-1 text-lg font-bold'>Choose your filter options</h3>
                     <div className='modal-action mt-0'>
                       <form method='dialog'>
                         <button>
@@ -60,27 +108,39 @@ export default function AttractionList() {
                   </div>
 
                   <div className='divider'></div>
+
                   <div>
                     <h3 className='text-md font-bold'>Region</h3>
                     <div className='form-control'>
                       <label className='label cursor-pointer'>
-                        <input type='checkbox' className='checkbox mr-2' />
+                        <input type='checkbox' className='checkbox mr-2'
+                                    checked={selectedFilters.regions.includes('Helsinki')}
+                                    onChange={() => handleCheckboxChange('regions', 'Helsinki')}
+                        />
                         <span className='label-text flex-1'>Helsinki</span>
                       </label>
                     </div>
                     <div className='form-control'>
                       <label className='label cursor-pointer'>
-                        <input type='checkbox' className='checkbox mr-2' />
+                        <input type='checkbox' className='checkbox mr-2' 
+                        checked={selectedFilters.regions.includes('Espoo')}
+                        onChange={() => handleCheckboxChange('regions', 'Espoo')}
+                        />
                         <span className='label-text flex-1'>Espoo</span>
                       </label>
                     </div>
                   </div>
+
                   <div className='divider'></div>
+
                   <div>
                     <h3 className='text-md font-bold'>Activities</h3>
                     <div className='form-control'>
                       <label className='label cursor-pointer'>
-                        <input type='checkbox' className='checkbox mr-2' />
+                        <input type='checkbox' className='checkbox mr-2'
+                        checked={selectedFilters.activities.includes('Design and art')}
+                        onChange={() => handleCheckboxChange('activities', 'Design and art')}
+                        />
                         <span className='label-text flex-1'>
                           Design and art
                         </span>
@@ -88,13 +148,19 @@ export default function AttractionList() {
                     </div>
                     <div className='form-control'>
                       <label className='label cursor-pointer'>
-                        <input type='checkbox' className='checkbox mr-2' />
+                        <input type='checkbox' className='checkbox mr-2'
+                        checked={selectedFilters.activities.includes('Shopping')}
+                        onChange={() => handleCheckboxChange('activities', 'Shopping')}                        
+                        />
                         <span className='label-text flex-1'>Shopping</span>
                       </label>
                     </div>
                     <div className='form-control'>
                       <label className='label cursor-pointer'>
-                        <input type='checkbox' className='checkbox mr-2' />
+                        <input type='checkbox' className='checkbox mr-2'
+                        checked={selectedFilters.activities.includes('Food and drinks')}
+                        onChange={() => handleCheckboxChange('activities', 'Food and drinks')}  
+                        />
                         <span className='label-text flex-1'>
                           Food and drinks
                         </span>
@@ -102,33 +168,59 @@ export default function AttractionList() {
                     </div>
                     <div className='form-control'>
                       <label className='label cursor-pointer'>
-                        <input type='checkbox' className='checkbox mr-2' />
+                        <input type='checkbox' className='checkbox mr-2'
+                        checked={selectedFilters.activities.includes('Attractions')}
+                        onChange={() => handleCheckboxChange('activities', 'Attractions')}                          
+                        />
                         <span className='label-text flex-1'>Attractions</span>
                       </label>
                     </div>
                   </div>
+
                   <div className='divider'></div>
+
                   <div>
                     <h3 className='text-md font-bold'>Admission Fee</h3>
                     <div className='form-control'>
                       <label className='label cursor-pointer'>
-                        <input type='checkbox' className='radio mr-2' />
+                        <input type='checkbox' className='radio mr-2' 
+                        checked={selectedFilters.admissionFee.includes('All')}
+                        onChange={() => handleCheckboxChange('admissionFee', 'All')}                          
+                        />
                         <span className='label-text flex-1'>All</span>
                       </label>
                     </div>
                     <div className='form-control'>
                       <label className='label cursor-pointer'>
-                        <input type='checkbox' className='radio mr-2' />
+                        <input type='checkbox' className='radio mr-2'
+                        checked={selectedFilters.admissionFee.includes('Free')}
+                        onChange={() => handleCheckboxChange('admissionFee', 'Free')}  
+                        />
                         <span className='label-text flex-1'>Free</span>
                       </label>
                     </div>
                   </div>
+
+                  <div className='divider'></div> {/* MN - divider added */}
+
+                  {/* MN - buttons added */}
+                  <div className='flex justify-center mt-4'>
+                    <button type='button' className='btn mr-2' onClick={handleClear}>
+                      Clear
+                    </button>
+                    <button type='button' className='btn btn-primary' onClick={handleSave}>
+                      Save
+                    </button>
+                  </div>
+
                 </div>
               </dialog>
             </div>
           </div>
           <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
-            {places.map((place) => (
+            {places
+            .filter(place => place.name.toLowerCase().includes(searchTerm.toLowerCase()))
+            .map((place) => (
               <Link
                 key={place.name}
                 to={`/place/${place.id}`}
