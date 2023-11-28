@@ -16,7 +16,6 @@ export default function AttractionList() {
 
   const [selectedFilters, setSelectedFilters] = useState({
     regions: [],
-    activities: [],
     admissionFee: [],
   })
   useEffect(() => {
@@ -57,7 +56,6 @@ export default function AttractionList() {
   const handleClear = () => {
     setSelectedFilters({
       regions: [],
-      activities: [],
       admissionFee: [],
     })
     // for track changes
@@ -116,12 +114,12 @@ export default function AttractionList() {
                         <input
                           type='checkbox'
                           className='checkbox mr-2'
-                          checked={selectedFilters.regions.includes('Helsinki')}
+                          checked={selectedFilters.regions.includes('Eastern Finland')}
                           onChange={() =>
-                            handleCheckboxChange('regions', 'Helsinki')
+                            handleCheckboxChange('regions', 'Eastern Finland')
                           }
                         />
-                        <span className='label-text flex-1'>Helsinki</span>
+                        <span className='label-text flex-1'>Eastern Finland</span>
                       </label>
                     </div>
                     <div className='form-control'>
@@ -129,33 +127,12 @@ export default function AttractionList() {
                         <input
                           type='checkbox'
                           className='checkbox mr-2'
-                          checked={selectedFilters.regions.includes('Espoo')}
+                          checked={selectedFilters.regions.includes('Western Finland')}
                           onChange={() =>
-                            handleCheckboxChange('regions', 'Espoo')
+                            handleCheckboxChange('regions', 'Western Finland')
                           }
                         />
-                        <span className='label-text flex-1'>Espoo</span>
-                      </label>
-                    </div>
-                  </div>
-                  <div className='divider'></div>
-                  <div>
-                    <h3 className='text-md font-bold'>Activities</h3>
-                    <div className='form-control'>
-                      <label className='label cursor-pointer'>
-                        <input
-                          type='checkbox'
-                          className='checkbox mr-2'
-                          checked={selectedFilters.activities.includes(
-                            'Design and art',
-                          )}
-                          onChange={() =>
-                            handleCheckboxChange('activities', 'Design and art')
-                          }
-                        />
-                        <span className='label-text flex-1'>
-                          Design and art
-                        </span>
+                        <span className='label-text flex-1'>Western Finland</span>
                       </label>
                     </div>
                     <div className='form-control'>
@@ -163,14 +140,12 @@ export default function AttractionList() {
                         <input
                           type='checkbox'
                           className='checkbox mr-2'
-                          checked={selectedFilters.activities.includes(
-                            'Shopping',
-                          )}
+                          checked={selectedFilters.regions.includes('Northern Finland')}
                           onChange={() =>
-                            handleCheckboxChange('activities', 'Shopping')
+                            handleCheckboxChange('regions', 'Northern Finland')
                           }
                         />
-                        <span className='label-text flex-1'>Shopping</span>
+                        <span className='label-text flex-1'>Northern Finland</span>
                       </label>
                     </div>
                     <div className='form-control'>
@@ -178,34 +153,12 @@ export default function AttractionList() {
                         <input
                           type='checkbox'
                           className='checkbox mr-2'
-                          checked={selectedFilters.activities.includes(
-                            'Food and drinks',
-                          )}
+                          checked={selectedFilters.regions.includes('Southern Finland')}
                           onChange={() =>
-                            handleCheckboxChange(
-                              'activities',
-                              'Food and drinks',
-                            )
+                            handleCheckboxChange('regions', 'Southern Finland')
                           }
                         />
-                        <span className='label-text flex-1'>
-                          Food and drinks
-                        </span>
-                      </label>
-                    </div>
-                    <div className='form-control'>
-                      <label className='label cursor-pointer'>
-                        <input
-                          type='checkbox'
-                          className='checkbox mr-2'
-                          checked={selectedFilters.activities.includes(
-                            'Attractions',
-                          )}
-                          onChange={() =>
-                            handleCheckboxChange('activities', 'Attractions')
-                          }
-                        />
-                        <span className='label-text flex-1'>Attractions</span>
+                        <span className='label-text flex-1'>Southern Finland</span>
                       </label>
                     </div>
                   </div>
@@ -231,18 +184,17 @@ export default function AttractionList() {
                           type='checkbox'
                           className='radio mr-2'
                           checked={selectedFilters.admissionFee.includes(
-                            'Free',
+                            '0.00',
                           )}
                           onChange={() =>
-                            handleCheckboxChange('admissionFee', 'Free')
+                            handleCheckboxChange('admissionFee', '0.00')
                           }
                         />
                         <span className='label-text flex-1'>Free</span>
                       </label>
                     </div>
                   </div>
-                  <div className='divider'></div> {/* MN - divider added */}
-                  {/* MN - buttons added */}
+                  <div className='divider'></div>
                   <div className='mt-4 flex justify-center'>
                     <button
                       type='button'
@@ -269,6 +221,22 @@ export default function AttractionList() {
                 .filter((place) =>
                   place.name.toLowerCase().includes(searchTerm.toLowerCase()),
                 )
+                // showing the place by region
+                .filter((place) => {
+                  if (selectedFilters.regions.length === 0) {
+                    return true;
+                  }
+                  return selectedFilters.regions.includes(place.region.name);
+                })
+                // showing the place by admission fee
+                .filter((place) => {
+                  if (selectedFilters.admissionFee.length === 0) {
+                    return true;
+                  }
+                  return selectedFilters.admissionFee.includes(
+                    parseFloat(place.admission_fee).toFixed(2)
+                  );
+                })
                 .map((place) => (
                   <Link
                     key={place.name}
