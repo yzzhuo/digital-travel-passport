@@ -44,7 +44,7 @@ export default function Review({ stamplist }: { stamplist: StampList }) {
         <div className='mt-4' key={stamp.id}>
           <div className='flex'>
             <div className='mr-6'>
-              <div className='font-bold'>{stamp.user}</div>
+              <div className='font-bold'>username</div>
               <div className='text-sm opacity-50'>
                 {dayjs(stamp.time_of_visit).format('DD/MM/YYYY HH:mm:ss')}
               </div>
