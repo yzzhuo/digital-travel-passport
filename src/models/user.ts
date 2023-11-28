@@ -10,6 +10,7 @@ export interface User {
   id: number
   username: string
   country?: string
-  created_at: string
-  updated_at: string
+  created_at?: string
+  updated_at?: string
+  display_name?: string
 }

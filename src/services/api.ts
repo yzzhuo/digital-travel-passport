@@ -2,6 +2,7 @@ import { AxiosRequestConfig } from 'axios'
 import { callExternalApi } from './external-api.service'
 import { ApiResponse } from '../models/api-response'
 import { StampPostData } from '../models/stamp'
+import { User } from '../models/user'
 
 const apiServerUrl = import.meta.env.VITE_APP_API_SERVER_URL
 
@@ -13,6 +14,27 @@ export const fetchCurrentUser = async (accessToken: string) => {
       'content-type': 'application/json',
       Authorization: `Bearer ${accessToken}`,
     },
+  }
+  const { data, error } = (await callExternalApi({ config })) as ApiResponse
+  return {
+    data,
+    error,
+  }
+}
+
+export const updateUser = async (
+  accessToken: string,
+  id: number,
+  body: Partial<User>,
+) => {
+  const config: AxiosRequestConfig = {
+    url: `${apiServerUrl}/user/${id}/`,
+    method: 'PATCH',
+    headers: {
+      'content-type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+    data: body,
   }
   const { data, error } = (await callExternalApi({ config })) as ApiResponse
   return {
