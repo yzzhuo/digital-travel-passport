@@ -38,10 +38,14 @@ export default function AttractionList() {
 
   // search a place
   const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value)
+      const inputValue = event.target.value;
+      setSearchTerm(inputValue);
   }
+  const filteredPlaces = places.filter((place) =>
+  place.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  // new added
+  // check box
   const handleCheckboxChange = (category, value) => {
     // Update the selectedFilters state based on checkbox changes
     setSelectedFilters((prevFilters) => ({
@@ -64,8 +68,11 @@ export default function AttractionList() {
 
   // click save button
   function handleSave() {
-    // to froneend
-  } // Click save button
+    const dialog = document.getElementById('my_modal_1');
+    if (dialog instanceof HTMLDialogElement) {
+      dialog.close();
+    }
+  }
 
   return (
     <PageLayout>
@@ -170,19 +177,6 @@ export default function AttractionList() {
                         <input
                           type='checkbox'
                           className='radio mr-2'
-                          checked={selectedFilters.admissionFee.includes('All')}
-                          onChange={() =>
-                            handleCheckboxChange('admissionFee', 'All')
-                          }
-                        />
-                        <span className='label-text flex-1'>All</span>
-                      </label>
-                    </div>
-                    <div className='form-control'>
-                      <label className='label cursor-pointer'>
-                        <input
-                          type='checkbox'
-                          className='radio mr-2'
                           checked={selectedFilters.admissionFee.includes(
                             '0.00',
                           )}
@@ -215,56 +209,59 @@ export default function AttractionList() {
               </dialog>
             </div>
           </div>
+          
           <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
-            {places.length ? (
-              places
-                .filter((place) =>
-                  place.name.toLowerCase().includes(searchTerm.toLowerCase()),
-                )
-                // showing the place by region
-                .filter((place) => {
-                  if (selectedFilters.regions.length === 0) {
-                    return true;
-                  }
-                  return selectedFilters.regions.includes(place.region.name);
-                })
-                // showing the place by admission fee
-                .filter((place) => {
-                  if (selectedFilters.admissionFee.length === 0) {
-                    return true;
-                  }
-                  return selectedFilters.admissionFee.includes(
-                    parseFloat(place.admission_fee).toFixed(2)
-                  );
-                })
-                .map((place) => (
-                  <Link
-                    key={place.name}
-                    to={`/place/${place.id}`}
-                    className='w-full'
-                  >
-                    <div
+              {places.length ? (
+                places
+                  .filter((place) =>
+                    place.name.toLowerCase().includes(searchTerm.toLowerCase()),
+                  )
+                  // showing the place by region
+                  .filter((place) => {
+                    if (selectedFilters.regions.length === 0) {
+                      return true;
+                    }
+                    return selectedFilters.regions.includes(place.region.name);
+                  })
+                  // showing the place by admission fee
+                  .filter((place) => {
+                    if (selectedFilters.admissionFee.length === 0) {
+                      return true;
+                    }
+                    return selectedFilters.admissionFee.includes(
+                      parseFloat(place.admission_fee).toFixed(2)
+                    );
+                  })
+                  .map((place) => (
+                    <Link
                       key={place.name}
-                      onClick={handleClickPlace}
-                      className='card mx-auto mt-4 border-2 border-gray-200 shadow'
+                      to={`/place/${place.id}`}
+                      className='w-full'
                     >
-                      <figure className='h-48'>
-                        <img src={place.photo} alt={place.name} />
-                      </figure>
-                      <div className='card-body'>
-                        <h2 className='card-title'>{place.name}</h2>
-                        <p>{place.region.name}</p>
+                      <div
+                        key={place.name}
+                        onClick={handleClickPlace}
+                        className='card mx-auto mt-4 border-2 border-gray-200 shadow'
+                      >
+                        <figure className='h-48'>
+                          <img src={place.photo} alt={place.name} />
+                        </figure>
+                        <div className='card-body'>
+                          <h2 className='card-title'>{place.name}</h2>
+                          <p>{place.region.name}</p>
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                ))
-            ) : (
-              <div>
-                <NotFound> Ops, no place found.</NotFound>
-              </div>
-            )}
+                    </Link>
+                  ))
+              ) : (
+                <div>
+                  <NotFound> Ops, no place found.</NotFound>
+                </div>
+              )}
           </div>
         </div>
+
+
       )}
     </PageLayout>
   )
