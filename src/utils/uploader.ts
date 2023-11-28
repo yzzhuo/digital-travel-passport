@@ -1,23 +1,28 @@
 // Document:
 // https://cloudinary.com/documentation/upload_images#example_1_upload_multiple_files_using_a_form_unsigned
-const url = 'https://api.cloudinary.com/v1_1/hzxyensd5/image/upload'
+const cloudName = 'digitalpassport'
+const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`
+const unsignedUploadPreset = 'user_upload'
 
-export const uploadFiles = async (files: FileList) => {
-  const formData = new FormData()
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i]
-    formData.append('file', file)
-    formData.append('upload_preset', 'docs_upload_example_us_preset')
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        body: formData,
+export function uploadFile(file): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const fd = new FormData()
+    fd.append('upload_preset', unsignedUploadPreset)
+    fd.append('tags', 'browser_upload') // Optional - add tags for image admin in Cloudinary
+    fd.append('file', file)
+
+    fetch(url, {
+      method: 'POST',
+      body: fd,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // File uploaded successfully
+        resolve(data.url)
       })
-      const data = await response.json()
-      console.log(data)
-    } catch (error) {
-      console.error(error)
-      throw error
-    }
-  }
+      .catch((error) => {
+        console.error('Error uploading the file:', error)
+        reject(error)
+      })
+  })
 }
