@@ -5,6 +5,28 @@ import { StampPostData } from '../models/stamp'
 
 const apiServerUrl = import.meta.env.VITE_APP_API_SERVER_URL
 
+export const fetchUser = async (
+  accessToken: string,
+  query?: Record<string, string>,
+) => {
+  const queryString = Object.keys(query || {})
+    .map((key) => `${key}=${query[key]}`)
+    .join('&')
+  const config: AxiosRequestConfig = {
+    url: `${apiServerUrl}/user/?${queryString}`,
+    method: 'GET',
+    headers: {
+      'content-type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+  }
+  const { data, error } = (await callExternalApi({ config })) as ApiResponse
+  return {
+    data,
+    error,
+  }
+}
+
 export const fetchPlaceList = async () => {
   const config: AxiosRequestConfig = {
     url: `${apiServerUrl}/place`,
@@ -37,7 +59,7 @@ export const fetchPlaceDetail = async (placeId: string) => {
 
 export const saveStamp = async (
   accessToken: string,
-  data: StampPostData,
+  data: Partial<StampPostData>,
 ): Promise<ApiResponse> => {
   const config: AxiosRequestConfig = {
     url: `${apiServerUrl}/stamp/`,
@@ -47,6 +69,32 @@ export const saveStamp = async (
       Authorization: `Bearer ${accessToken}`,
     },
     data,
+  }
+  const { data: responseData, error } = (await callExternalApi({
+    config,
+  })) as ApiResponse
+  return {
+    data: responseData,
+    error,
+  }
+}
+
+export const saveStampPhoto = async (
+  accessToken: string,
+  file: File,
+  stamp: string,
+) => {
+  const fd = new FormData()
+  fd.append('photo', file)
+  fd.append('stamp', stamp)
+  const config: AxiosRequestConfig = {
+    url: `${apiServerUrl}/stamp_photo/`,
+    method: 'POST',
+    headers: {
+      'content-type': 'multipart/form-data',
+      Authorization: `Bearer ${accessToken}`,
+    },
+    data: fd,
   }
   const { data: responseData, error } = (await callExternalApi({
     config,
@@ -82,9 +130,13 @@ export const updateStamp = async (
 
 export const fetchStamps = async (
   accessToken: string,
+  query?: Record<string, string>,
 ): Promise<ApiResponse> => {
+  const queryString = Object.keys(query || {})
+    .map((key) => `${key}=${query[key]}`)
+    .join('&')
   const config: AxiosRequestConfig = {
-    url: `${apiServerUrl}/stamp`,
+    url: `${apiServerUrl}/stamp/?${queryString}`,
     method: 'GET',
     headers: {
       'content-type': 'application/json',

@@ -8,13 +8,26 @@ export interface Stamp {
   time_of_visit: string
   notes: string
   rating: number
-  // TODO: add photos
-  photos: string[]
+  photos: Photo[]
 }
 
 export interface StampPostData {
   place: string
-  time_of_visit?: string
-  notes?: string
-  rating?: number
+  time_of_visit: string
+  notes: string
+  rating: number
+  photos: string[]
+}
+
+export interface StampPhotoData {
+  id: number
+  photo: string
+  stamp: string
+  url: string
+}
+
+export interface Photo {
+  url: string
+  id: number
+  photo: string
 }

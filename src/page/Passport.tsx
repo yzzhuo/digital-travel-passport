@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import Bg from '../assets/passport_bg.jpg'
 import {
@@ -7,7 +6,7 @@ import {
   ChevronRightIcon,
 } from '@heroicons/react/24/solid'
 import { PageLayout } from '../component/PageLayout'
-import { fetchStampDetail, fetchStamps } from '../services/api'
+import { fetchStampDetail, fetchStamps, fetchUser } from '../services/api'
 import { useLocation } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 import { type Stamp } from '../models/stamp'
@@ -28,16 +27,21 @@ export default function Passport() {
   const [isShowBadge, setIsShowBadge] = useState<boolean>(false)
 
   useEffect(() => {
-    console.log('currentStampId', currentStampId)
     if (currentStampId) {
       getStampDetail(currentStampId)
     }
   }, [currentStampId])
 
   useEffect(() => {
+    getCurrentUser()
     getStamps()
   }, [])
 
+  const getCurrentUser = async () => {
+    const accessToken = await getAccessTokenSilently()
+    const data = await fetchUser(accessToken)
+    console.log('current user', data)
+  }
   const gotoPlacePage = () => {
     window.location.href = '/place'
   }
@@ -55,7 +59,9 @@ export default function Passport() {
 
   const getStamps = async () => {
     const accessToken = await getAccessTokenSilently()
-    const response = await fetchStamps(accessToken)
+    const response = await fetchStamps(accessToken, {
+      // user:
+    })
     if (response.error) {
       alert('Error fetching stamps')
     }
@@ -162,12 +168,12 @@ export default function Passport() {
               <div className='mt-1  flex h-48 w-full flex-auto items-center  justify-center border-4 border-dotted border-gray-200'>
                 <StampPhoto imageUrl={stampDetail.place.photo} />
               </div>
-              <p className=''>{stampDetail.notes}</p>
+              <div>{stampDetail.notes}</div>
               <div className='mt-4 grid grid-cols-3 gap-1'>
-                {(stampDetail.photos || []).map((img) => {
+                {(stampDetail.photos || []).map((stampPhoto) => {
                   return (
-                    <div key={img} className='w-full'>
-                      <img src={img} />
+                    <div key={stampPhoto.id} className='w-full'>
+                      <img src={stampPhoto.photo} />
                     </div>
                   )
                 })}

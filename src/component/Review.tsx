@@ -1,20 +1,18 @@
-export default function Review() {
+import { Stamp } from '../models/stamp'
+
+export default function Review({ stamps }: { stamps: Stamp[] }) {
   return (
     <div className=''>
-      <div className='mt-4'>
-        <div className='flex'>
-          <div className='mr-6'>
-            <div className='font-bold'>Hart Hagerty</div>
-            <div className='text-sm opacity-50'>11/09/2022</div>
+      {stamps.map((stamp) => (
+        <div className='mt-4' key={stamp.id}>
+          <div className='flex'>
+            <div className='mr-6'>
+              <div className='font-bold'>{stamp.user}</div>
+              <div className='text-sm opacity-50'>{stamp.time_of_visit}</div>
+            </div>
           </div>
-        </div>
-        <p className='ml-0 mt-2'>
-          As a traveler, I had the pleasure of visiting the Helsinki Cathedral,
-          and it truly left an indelible mark on my journey through Finland's
-          capital city. This architectural masterpiece, perched atop a majestic
-          flight of stairs.
-        </p>
-        {/* <div className='flex gap-2 overflow-auto'>
+          <p className='ml-0 mt-2'>{stamp.notes}</p>
+          {/* <div className='flex gap-2 overflow-auto'>
           <img
             src='https://res.cloudinary.com/digitalpassport/image/upload/v1/passport-media/Nordic_Wildlife_Reserve_ipfhyo'
             className='h-20 w-20'
@@ -48,7 +46,8 @@ export default function Review() {
             className='h-20 w-20'
           />
         </div> */}
-      </div>
+        </div>
+      ))}
     </div>
   )
 }

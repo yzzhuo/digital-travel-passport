@@ -1,6 +1,11 @@
 import { useRef, useState, useEffect } from 'react'
 import { PageLayout } from '../component/PageLayout'
-import { fetchPlaceDetail, saveStamp, updateStamp } from '../services/api'
+import {
+  fetchPlaceDetail,
+  saveStamp,
+  saveStampPhoto,
+  updateStamp,
+} from '../services/api'
 import {
   CalendarDaysIcon,
   UserGroupIcon,
@@ -9,17 +14,22 @@ import {
   ChevronLeftIcon,
 } from '@heroicons/react/24/solid'
 import { type Place } from '../models/place'
-import { uploadFile } from '../utils/uploader'
 import { PageLoading } from '../component/PageLoader'
 import Calendar from 'react-calendar'
 import dayjs from 'dayjs'
 import { useAuth0 } from '@auth0/auth0-react'
 import { StampBox } from '../component/StampBox'
-import StampImg from '../assets/stamp_sample.jpg'
 import { Link, useLocation } from 'react-router-dom'
 import MessageBadge, { MessageBadgeType } from '../component/MessageBadge'
 import NotFound from '../component/NotFound'
+import { StampPhotoData } from '../models/stamp'
 
+interface StampFormData {
+  notes: string
+  time_of_visit: Date
+  people: string
+  stampPhotos: StampPhotoData[]
+}
 export const StampPage = () => {
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
@@ -31,11 +41,11 @@ export const StampPage = () => {
 
   const [isDatePickerOpen, setDatePickerOpen] = useState<boolean>(false)
   const [previewImage, setPreviewImage] = useState<string>('')
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<StampFormData>({
     notes: '',
-    photos: [],
     time_of_visit: new Date(),
     people: '',
+    stampPhotos: [],
   })
 
   const datePickerRef = useRef<HTMLDialogElement>(null)
@@ -66,18 +76,17 @@ export const StampPage = () => {
       setMessage('')
     }, 3000)
   }
-  const handleStamp = async () => {
+  const handleGetStamp = async () => {
     const accessToken = await getAccessTokenSilently()
     const data = await saveStamp(accessToken, {
       place: placeDetail.url,
-      time_of_visit: dayjs(formData.time_of_visit).toISOString(),
+      time_of_visit: dayjs(formData.time_of_visit).toISOString() as string,
     })
     if (data.error) {
       return showMessage(data.error.message)
     }
     setStampDetail({
       ...data.data,
-      url: StampImg,
     })
     return showMessage('Your stamp has been saved')
   }
@@ -85,11 +94,19 @@ export const StampPage = () => {
   const handleImageUpload = async () => {
     const files = fileInputRef?.current?.files
     try {
-      const imageUrl = await uploadFile(files[0])
-      setFormData({
-        ...formData,
-        photos: [...formData.photos, imageUrl],
-      })
+      const accessToken = await getAccessTokenSilently()
+      // const imageUrl = await uploadFile(files[0])
+      const stampPhoto = await saveStampPhoto(
+        accessToken,
+        files[0],
+        stampDetail.url,
+      )
+      if (!stampPhoto.error) {
+        setFormData({
+          ...formData,
+          stampPhotos: [...formData.stampPhotos, stampPhoto.data],
+        })
+      }
     } catch (error) {
       console.log(error)
     }
@@ -98,7 +115,7 @@ export const StampPage = () => {
   const handleDeleteImage = (photo: string) => {
     setFormData({
       ...formData,
-      photos: formData.photos.filter((item) => item !== photo),
+      stampPhotos: formData.stampPhotos.filter((item) => item.photo !== photo),
     })
     setPreviewImage(null)
   }
@@ -106,9 +123,8 @@ export const StampPage = () => {
     const accessToken = await getAccessTokenSilently()
     const data = await updateStamp(accessToken, stampDetail.id, {
       notes: formData.notes,
-      // time_of_visit: dayjs(formData.time_of_visit).toISOString(),
-      // photos: formData.photos,
-      // people: formData.people,
+      time_of_visit: dayjs(formData.time_of_visit).toISOString(),
+      photos: formData.stampPhotos.map((item) => item.url),
     })
     if (data.error) {
       showMessage(data.error.message)
@@ -168,7 +184,7 @@ export const StampPage = () => {
               <StampBox
                 placeDetail={placeDetail}
                 stampDetail={stampDetail}
-                onStamp={handleStamp}
+                onStamp={handleGetStamp}
               />
               {stampDetail && (
                 <details className='collapse-arrow collapse mt-4 rounded-none border-b-2 border-t-2 border-base-300'>
@@ -200,13 +216,13 @@ export const StampPage = () => {
                           </span>
                         </label>
                         <div className='grid grid-cols-4 gap-4'>
-                          {formData.photos.map((photo) => (
+                          {formData.stampPhotos.map((photo) => (
                             <div
-                              key={photo}
+                              key={photo.photo}
                               className='mt-2 h-20 w-20 cursor-pointer'
-                              onClick={() => setPreviewImage(photo)}
+                              onClick={() => setPreviewImage(photo.photo)}
                             >
-                              <img src={photo} />
+                              <img src={photo.photo} />
                             </div>
                           ))}
                           <div
