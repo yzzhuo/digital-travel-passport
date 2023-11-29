@@ -60,6 +60,7 @@ export default function AttractionList() {
   const handleClear = () => {
     setSelectedFilters({
       regions: [],
+      
       admissionFee: [],
     })
     // for track changes
