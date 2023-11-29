@@ -1,4 +1,5 @@
 import { Place } from './place'
+import { User } from './user'
 export interface StampList {
   count: number
   next: string
@@ -10,7 +11,7 @@ export interface Stamp {
   url: string
   id: string
   place: Place
-  user: string
+  user: User
   time_of_visit: string
   notes: string
   rating: number

@@ -41,13 +41,13 @@ export default function Review({ stamplist }: { stamplist: StampList }) {
   return (
     <div className=''>
       {stamps.map((stamp) => {
-        const userStr = stamp.user.split('/')
-        const userId = userStr[userStr.length - 2]
         return (
           <div className='mt-4' key={stamp.id}>
             <div className='flex'>
               <div className='mr-6'>
-                <div className='font-bold'>User {userId}</div>
+                <div className='font-bold'>
+                  {stamp.user.display_name || 'momo'}
+                </div>
                 <div className='text-sm opacity-50'>
                   {dayjs(stamp.time_of_visit).format('DD/MM/YYYY HH:mm:ss')}
                 </div>
