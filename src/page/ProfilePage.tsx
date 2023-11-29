@@ -4,7 +4,7 @@ import { LogoutButton } from '../component/LogoutButton'
 import { PencilSquareIcon } from '@heroicons/react/24/outline'
 import { useEffect, useState } from 'react'
 import { User } from '../models/user'
-import { fetchCurrentUser, updateStamp, updateUser } from '../services/api'
+import { fetchCurrentUser, updateUser } from '../services/api'
 
 export const ProfilePage = () => {
   const { user, getAccessTokenSilently } = useAuth0()
@@ -14,7 +14,7 @@ export const ProfilePage = () => {
     url: '',
     country: '',
     username: '',
-    display_name: '',
+    display_name: ' ',
   })
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export const ProfilePage = () => {
 
   const handleSave = async () => {
     const accessToken = await getAccessTokenSilently()
-    const res = await updateUser(accessToken, userInfo.id, {
+    const res = await updateUser(accessToken, {
       display_name: userInfo.display_name,
     })
     if (!res.error) {

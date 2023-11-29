@@ -22,13 +22,9 @@ export const fetchCurrentUser = async (accessToken: string) => {
   }
 }
 
-export const updateUser = async (
-  accessToken: string,
-  id: number,
-  body: Partial<User>,
-) => {
+export const updateUser = async (accessToken: string, body: Partial<User>) => {
   const config: AxiosRequestConfig = {
-    url: `${apiServerUrl}/user/${id}/`,
+    url: `${apiServerUrl}/current_user/`,
     method: 'PATCH',
     headers: {
       'content-type': 'application/json',
