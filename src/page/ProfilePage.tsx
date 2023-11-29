@@ -1,14 +1,16 @@
 import { useAuth0 } from '@auth0/auth0-react'
 import { PageLayout } from '../component/PageLayout'
 import { LogoutButton } from '../component/LogoutButton'
-import { PencilSquareIcon } from '@heroicons/react/24/outline'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { User } from '../models/user'
 import { fetchCurrentUser, updateUser } from '../services/api'
+import countryList from 'react-select-country-list'
+import Select from 'react-select'
 
 export const ProfilePage = () => {
   const { user, getAccessTokenSilently } = useAuth0()
   const [isEditing, setIsEditing] = useState<boolean>(false)
+  const [isSaving, setIsSaving] = useState<boolean>(false)
   const [userInfo, setUserInfo] = useState<User>({
     id: 0,
     url: '',
@@ -16,6 +18,17 @@ export const ProfilePage = () => {
     username: '',
     display_name: ' ',
   })
+  const [formData, setFormData] = useState({
+    display_name: '',
+    country: '',
+  })
+  const countryOptions = useMemo(() => countryList().getData(), [])
+  const countryDisplayName = useMemo(() => {
+    const country = countryOptions.find(
+      (country) => country.value === userInfo.country,
+    )
+    return country ? country.label : 'Unknown Country'
+  }, [userInfo.country])
 
   useEffect(() => {
     if (!userInfo.id) {
@@ -31,13 +44,25 @@ export const ProfilePage = () => {
     }
   }
 
+  const handleEdit = () => {
+    setFormData({
+      display_name: userInfo.display_name,
+      country: userInfo.country,
+    })
+    setIsEditing(true)
+  }
+
   const handleSave = async () => {
+    setIsSaving(true)
     const accessToken = await getAccessTokenSilently()
     const res = await updateUser(accessToken, {
-      display_name: userInfo.display_name,
+      display_name: formData.display_name,
+      country: formData.country,
     })
     if (!res.error) {
       setIsEditing(false)
+      setUserInfo(res.data)
+      setIsSaving(false)
     }
   }
 
@@ -49,47 +74,58 @@ export const ProfilePage = () => {
   return (
     <PageLayout>
       <div className='container flex h-screen items-center justify-center'>
-        <article className='prose mx-auto	text-center'>
+        <div className='prose mx-auto	text-center'>
           <div>
             <div className='avatar'>
               <div className='w-24 rounded-full'>
                 <img className='mb-0 mt-0' src={user.picture} />
               </div>
             </div>
-            <div className=''>
-              <h2 className=''>
-                {isEditing ? (
-                  <input
-                    className='text-2xl font-bold'
-                    defaultValue={userInfo.display_name || user.name}
-                    value={userInfo.display_name}
-                    onChange={(e) =>
-                      setUserInfo({ ...userInfo, display_name: e.target.value })
-                    }
-                  />
-                ) : (
-                  <span className='text-2xl font-bold'>
-                    {userInfo.display_name || user.name}
-                  </span>
-                )}
-                <PencilSquareIcon
-                  className='ml-2 inline h-5 w-5'
-                  onClick={() => {
-                    if (isEditing) {
-                      handleSave()
-                    } else {
-                      setIsEditing(true)
-                    }
-                  }}
+            <div className='mt-6 flex w-80 flex-col gap-2'>
+              {isEditing ? (
+                <input
+                  className='input input-bordered w-full'
+                  value={formData.display_name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, display_name: e.target.value })
+                  }
                 />
-              </h2>
-              <span className=''>{user.email}</span>
+              ) : (
+                <span className='text-2xl font-bold'>
+                  {userInfo.display_name || user.name}
+                </span>
+              )}
+              {!isEditing && <span className=''>{user.email}</span>}
+              {isEditing ? (
+                <Select
+                  placeholder='Select Country'
+                  options={countryOptions}
+                  onChange={(country: any) =>
+                    setFormData({ ...formData, country: country.value })
+                  }
+                />
+              ) : (
+                <span className=''>{countryDisplayName}</span>
+              )}
             </div>
           </div>
-          <div className='mt-8'>
-            <LogoutButton />
+          <div className='mt-8 flex flex-col'>
+            {isEditing ? (
+              <button className='btn btn-primary mb-4' onClick={handleSave}>
+                {isSaving ? (
+                  <span className='loading loading-dots loading-xs'></span>
+                ) : (
+                  'Save'
+                )}
+              </button>
+            ) : (
+              <button className='btn btn-primary mb-4' onClick={handleEdit}>
+                Edit My Profile
+              </button>
+            )}
+            {!isEditing && <LogoutButton />}
           </div>
-        </article>
+        </div>
       </div>
     </PageLayout>
   )
