@@ -29,6 +29,7 @@ export const App = () => {
       <Route path='/' element={DefaultNavigate} />
       <Route path='/place' element={<AttractionList />} />
       <Route path='/place/:placeId' element={<AttractionDetail />} />
+      <Route path='/passport/share/:shareUserId' element={<Passport />} />
       <Route
         path='/passport'
         element={<AuthenticationGuard component={Passport} />}

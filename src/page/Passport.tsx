@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo, Fragment } from 'react'
 import Bg from '../assets/passport_bg.jpg'
 import {
   CalendarDaysIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  ShareIcon,
 } from '@heroicons/react/24/solid'
 import { PageLayout } from '../component/PageLayout'
 import { fetchStamps, fetchCurrentUser } from '../services/api'
@@ -16,6 +17,7 @@ import StampPhoto from '../component/StampPhoto'
 import { User } from '../models/user'
 import { PageLoading } from '../component/PageLoader'
 import ImagePreviewer from '../component/ImagePreviewer'
+import { useParams } from 'react-router-dom'
 
 export default function Passport() {
   const location = useLocation()
@@ -33,13 +35,26 @@ export default function Passport() {
   const [isShowBadge, setIsShowBadge] = useState<boolean>(false)
   const [isLoaded, setIsLoaded] = useState<boolean>(false)
   const [previewImage, setPreviewImage] = useState<string>('')
+  const { shareUserId } = useParams() // if userId is not null, then it is a shared passport
 
   useEffect(() => {
     getStamps()
   }, [])
 
+  const regions = useMemo(() => {
+    const regions = new Set<string>()
+    stamps.results.forEach((stamp) => {
+      regions.add(stamp.place.region.name)
+    })
+    return Array.from(regions)
+  }, [stamps])
+
+  const getAccessToken = async () => {
+    return shareUserId ? '' : await getAccessTokenSilently()
+  }
+
   const getCurrentUser = async () => {
-    const accessToken = await getAccessTokenSilently()
+    const accessToken = await getAccessToken()
     const data = await fetchCurrentUser(accessToken)
     if (!data.error) {
       setCurrentUser(data.data)
@@ -54,13 +69,18 @@ export default function Passport() {
   }
 
   const getStamps = async () => {
-    let user = currentUser
+    let passportOwnerId = ''
     if (!currentUser) {
-      user = await getCurrentUser()
+      if (shareUserId) {
+        passportOwnerId = shareUserId
+      } else {
+        const user = await getCurrentUser()
+        passportOwnerId = user.id + ''
+      }
     }
-    const accessToken = await getAccessTokenSilently()
+    const accessToken = await getAccessToken()
     const response = await fetchStamps(accessToken, {
-      user: user.id + '',
+      user: passportOwnerId + '',
     })
     if (response.error) {
       alert('Error fetching stamps')
@@ -85,7 +105,7 @@ export default function Passport() {
       return
     }
     if (stampIndex === stamps.results.length - 1) {
-      const accessToken = await getAccessTokenSilently()
+      const accessToken = await getAccessToken()
       const query = stamps.next
         .split('?')[1]
         .split('&')
@@ -112,15 +132,18 @@ export default function Passport() {
   }
 
   const handleShare = () => {
-    const url = window.location.href
+    const url = `${window.location.origin}/passport/share/${
+      currentUser?.id || shareUserId
+    }`
     navigator.clipboard.writeText(url)
     setIsShowBadge(true)
     setTimeout(() => {
       setIsShowBadge(false)
     }, 3000)
   }
+  const Wrapper = shareUserId ? Fragment : PageLayout
   return (
-    <PageLayout>
+    <Wrapper>
       {isLoaded ? (
         <div
           className='relative flex items-center justify-center p-6 pb-24'
@@ -139,28 +162,28 @@ export default function Passport() {
                 <div className='stats shadow'>
                   <div className='stat'>
                     <div className='stat-title'>Stamps</div>
-                    <div className='stat-value'>{stamps.results.length}</div>
+                    <div className='stat-value'>{stamps.count}</div>
                     {/* <div className='stat-desc'>21% more than last month</div> */}
                   </div>
                   <div className='stat'>
                     <div className='stat-title'>Regions</div>
-                    <div className='stat-value'>0</div>
+                    <div className='stat-value'>{regions.length}</div>
                   </div>
                 </div>
                 <div className='card-actions mb-4 mt-2 flex justify-center'>
                   {stamps.results.length > 0 ? (
-                    <div className='flex'>
+                    <div className='flex w-full'>
                       <button
-                        className='btn btn-secondary'
+                        className='btn btn-secondary flex-1'
                         onClick={() => handleNext()}
                       >
                         Open Passport
                       </button>
                       <button
-                        className='btn btn-warning ml-4'
+                        className='float btn btn-warning ml-2'
                         onClick={() => handleShare()}
                       >
-                        Share
+                        <ShareIcon className='h-6 w-6' />
                       </button>
                     </div>
                   ) : (
@@ -255,6 +278,6 @@ export default function Passport() {
           onClose={() => setPreviewImage('')}
         />
       )}
-    </PageLayout>
+    </Wrapper>
   )
 }
