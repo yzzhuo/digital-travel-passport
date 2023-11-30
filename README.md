@@ -1,4 +1,5 @@
 # Digital Travel Passport
+Explore local treasures effortlessly and immortalize your travel adventures. It is an application helps travlers to discover hidden gems and allows them to capture the journey through photos and journal entries.
 
 A application for CS-E4400 - Design of WWW Services D, Lecture, 5.9.2023-11.10.2023
 
@@ -38,8 +39,5 @@ At last, open localhost:3000 on browser to preview the frontend page, and when y
 [backend code](https://github.com/jparta/DigitalPassport)
 
 ## What it looks like
-<img src="./example/place.jpg" height='320px'/>
-<img src="./example/placedetail.jpg" height='320px'/>
-<img src="./example/stamppage.jpg" height='320px'/>
-<img src="./example/passport_page.jpg" height='320px'/>
-<img src="./example/passportstamp.jpg" height='320px'/>
+<img src="./example/example1.png" />
+<img src="./example/example2.png" />
