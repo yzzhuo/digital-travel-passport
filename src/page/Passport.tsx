@@ -5,6 +5,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   ShareIcon,
+  PencilIcon,
 } from '@heroicons/react/24/solid'
 import { PageLayout } from '../component/PageLayout'
 import { fetchStamps, fetchCurrentUser } from '../services/api'
@@ -98,6 +99,9 @@ export default function Passport() {
       }
     }
     setIsLoaded(true)
+  }
+  const handleEditStamp = (stampId: string, placeId: number) => {
+    window.location.href = `/stamp/${stampId}?placeid=${placeId}`
   }
 
   const handleNext = async () => {
@@ -203,9 +207,22 @@ export default function Passport() {
               style={{ height: 560 }}
               className='card w-full border-2 border-solid border-primary'
             >
-              <div className='card-body flex flex-col'>
+              <div className='card-body flex flex-col '>
                 <h2 className='card-title'>
                   {stamps.results[stampIndex].place.name}
+                  {!shareUserId && (
+                    <span
+                      className='cursor-pointer'
+                      onClick={() =>
+                        handleEditStamp(
+                          stamps.results[stampIndex].id,
+                          stamps.results[stampIndex].place.id,
+                        )
+                      }
+                    >
+                      <PencilIcon className='h-4 w-4 hover:fill-primary' />
+                    </span>
+                  )}
                 </h2>
                 <div
                   style={{ height: 200 }}

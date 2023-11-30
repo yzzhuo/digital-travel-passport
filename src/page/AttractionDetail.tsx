@@ -132,7 +132,7 @@ export default function AttractionDetail() {
                       </svg>
                     </button>
                     <span className='text-md mt-2 sm:text-sm'>
-                      {currentStamp ? 'Edit My ' : 'Get a '}Stamp
+                      {currentStamp ? 'Edit ' : 'Get '}Stamp
                     </span>
                   </div>
                 </div>
