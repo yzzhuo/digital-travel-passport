@@ -1,27 +1,45 @@
-# React + TypeScript + Vite
+# Digital Travel Passport
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A application for CS-E4400 - Design of WWW Services D, Lecture, 5.9.2023-11.10.2023
 
-Currently, two official plugins are available:
+## Technologies
+- [React.js](https://react.dev/)
+- [Vite.js](https://vitejs.dev/)
+- [TailwindCSS](https://tailwindcss.com/docs/installation)
+- [daisyUI](https://daisyui.com/)
+- [Auth0](https://auth0.com/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+## How to start the frontend project
+After cloning this project on your local environment, install the dependencies:
+```
+npm install
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+create a `.env` file in the root of the project, fill out the information.
+
+```
+VITE_APP_AUTH0_DOMAIN=YOUR_AUTH0_DOMAIN
+VITE_APP_AUTH0_CLIENT_ID=YOUR_AUTH0_CLIENT_ID
+VITE_APP_AUTH0_CALLBACK_URL=YOUR_AUTH0_CALLBACK_URL
+VITE_APP_AUTH0_AUDIENCE=AUTH0_AUDIENCE
+VITE_APP_API_SERVER_URL=BACKEND_API_SERVER_UR
+VITE_APP_GOOGLE_MAP_API_KEY=GOOGLE_MAP_API_KEY
+```
+
+
+start the frontend service by running:
+```
+npm run start
+```
+
+At last, open localhost:3000 on browser to preview the frontend page, and when you interact with the page, you can fine it call backend API using another domain localhost:8000
+
+## Project of the backend part
+[backend code](https://github.com/jparta/DigitalPassport)
+
+## What it looks like
+<img src="./example/place.jpg" height='320px'/>
+<img src="./example/placedetail.jpg" height='320px'/>
+<img src="./example/stamppage.jpg" height='320px'/>
+<img src="./example/passport_page.jpg" height='320px'/>
+<img src="./example/passportstamp.jpg" height='320px'/>
