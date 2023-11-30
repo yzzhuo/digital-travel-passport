@@ -166,7 +166,7 @@ export default function AttractionDetail() {
                   name='my_tabs_2'
                   role='tab'
                   className='tab'
-                  aria-label={`Review`}
+                  aria-label={`Reviews`}
                 />
                 <div role='tabpanel' className='tab-content pt-2'>
                   <Review stamplist={stamps} />
