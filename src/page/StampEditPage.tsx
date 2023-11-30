@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { PageLayout } from '../component/PageLayout'
 import {
+  deleteStampPhoto,
   fetchPlaceDetail,
   fetchStampDetail,
   saveStamp,
@@ -133,11 +134,16 @@ export const StampPage = () => {
     }
   }
 
-  const handleDeleteImage = (photo: string) => {
+  const handleDeleteImage = async (photo: string) => {
+    const accessToken = await getAccessTokenSilently()
+    const targetPhoto = formData.stampPhotos.find(
+      (item) => item.photo === photo,
+    )
     setFormData({
       ...formData,
       stampPhotos: formData.stampPhotos.filter((item) => item.photo !== photo),
     })
+    await deleteStampPhoto(accessToken, targetPhoto.id)
     setPreviewImage(null)
   }
 
@@ -146,7 +152,7 @@ export const StampPage = () => {
     const data = await updateStamp(accessToken, stampDetail.id, {
       notes: formData.notes,
       time_of_visit: dayjs(formData.time_of_visit).toISOString(),
-      photos: formData.stampPhotos.map((item) => item.url),
+      // photos: formData.stampPhotos.map((item) => item.url),
     })
     if (data.error) {
       showMessage(data.error.message)

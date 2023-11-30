@@ -117,6 +117,27 @@ export const saveStampPhoto = async (
   }
 }
 
+export const deleteStampPhoto = async (
+  accessToken: string,
+  stampPhotoId: number,
+) => {
+  const config: AxiosRequestConfig = {
+    url: `${apiServerUrl}/stamp_photo/${stampPhotoId}`,
+    method: 'DELETE',
+    headers: {
+      'content-type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+  }
+  const { data: responseData, error } = (await callExternalApi({
+    config,
+  })) as ApiResponse
+  return {
+    data: responseData,
+    error,
+  }
+}
+
 export const updateStamp = async (
   accessToken: string,
   stampId: string,
