@@ -1,4 +1,4 @@
-import GoogleMap from 'google-map-react'
+import GoogleMap from 'google-maps-react-markers'
 import { MapPinIcon } from '@heroicons/react/24/solid'
 
 interface Location {
@@ -24,11 +24,7 @@ export default function Map({
   const key = import.meta.env.VITE_APP_GOOGLE_MAP_API_KEY
   return (
     <div className='h-full w-full'>
-      <GoogleMap
-        bootstrapURLKeys={{ key }}
-        defaultCenter={center}
-        defaultZoom={zoom}
-      >
+      <GoogleMap apiKey={key} defaultCenter={center} defaultZoom={zoom}>
         <AnyReactComponent lat={center.lat} lng={center.lng} />
       </GoogleMap>
     </div>
