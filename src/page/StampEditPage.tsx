@@ -2,9 +2,7 @@ import { useRef, useState, useEffect } from 'react'
 import { PageLayout } from '../component/PageLayout'
 import {
   fetchPlaceDetail,
-  // fetchPlaceDetail,
   fetchStampDetail,
-  fetchStamps,
   saveStamp,
   saveStampPhoto,
   updateStamp,
@@ -142,6 +140,7 @@ export const StampPage = () => {
     })
     setPreviewImage(null)
   }
+
   const handleSaveStamp = async () => {
     const accessToken = await getAccessTokenSilently()
     const data = await updateStamp(accessToken, stampDetail.id, {

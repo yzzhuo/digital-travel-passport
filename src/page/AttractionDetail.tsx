@@ -24,6 +24,7 @@ export default function AttractionDetail() {
   const [placeDetail, setPlaceDetail] = useState<Place | null>(null)
   const { getAccessTokenSilently } = useAuth0()
   const [currentStamp, setCurrentStamp] = useState<Stamp | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [stamps, setStamps] = useState<StampList>({
     count: 0,
     next: '',
@@ -31,17 +32,21 @@ export default function AttractionDetail() {
     results: [],
   })
 
-  useEffect(() => {
-    fetchPlaceDetail(placeId).then((data) => {
-      if (!data.error) {
-        setPlaceDetail(data.data)
-      }
-    })
+  const initData = async () => {
+    setIsLoading(true)
+    const data = await fetchPlaceDetail(placeId)
+    if (!data.error) {
+      setPlaceDetail(data.data)
+    }
     if (placeId) {
       // for reviews data
-      checkIfUserHasStamp()
-      fetchStampsByPlace()
+      await Promise.all([checkIfUserHasStamp(), fetchStampsByPlace()])
     }
+    setIsLoading(false)
+  }
+
+  useEffect(() => {
+    initData()
   }, [placeId])
 
   const checkIfUserHasStamp = async () => {
@@ -49,11 +54,10 @@ export default function AttractionDetail() {
     const currentUser = await fetchCurrentUser(accessToken)
     const res = await fetchStamps(accessToken, {
       user: currentUser.data.id,
+      place: placeId,
     })
-    if (!res.error) {
-      if (res.data.results.length > 0) {
-        setCurrentStamp(res.data.results[0])
-      }
+    if (res.data.results.length > 0) {
+      setCurrentStamp(res.data.results[0])
     }
   }
   const fetchStampsByPlace = async () => {
@@ -85,7 +89,7 @@ export default function AttractionDetail() {
   }
   return (
     <PageLayout>
-      {placeDetail ? (
+      {!isLoading && placeDetail ? (
         <div>
           <div className='relative'>
             <GoBackBtn />

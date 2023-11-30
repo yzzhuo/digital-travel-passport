@@ -6,16 +6,8 @@ interface Location {
   lng: number
 }
 
-const AnyReactComponent = ({
-  text,
-}: {
-  text: string
-  lat?: number
-  lng?: number
-}) => {
-  console.log({
-    text,
-  })
+const AnyReactComponent = ({ lat, lng }: { lat?: number; lng?: number }) => {
+  console.log(lat, lng)
   return (
     <div>
       <MapPinIcon className='h-5 w-5' />
@@ -37,7 +29,7 @@ export default function Map({
         defaultCenter={center}
         defaultZoom={zoom}
       >
-        <AnyReactComponent lat={center.lat} lng={center.lng} text='My Marker' />
+        <AnyReactComponent lat={center.lat} lng={center.lng} />
       </GoogleMap>
     </div>
   )
