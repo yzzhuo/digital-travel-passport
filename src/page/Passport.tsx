@@ -209,7 +209,7 @@ export default function Passport() {
           )}
           {stampIndex >= 0 && (
             <div
-              style={{ height: 560 }}
+              style={{ minHeight: 560 }}
               className='card w-full border-2 border-solid border-primary'
             >
               <div className='card-body flex flex-col '>
@@ -256,7 +256,7 @@ export default function Passport() {
                   </button>
                 )}
                 <div>{stamps.results[stampIndex].notes}</div>
-                <div className='mt-4 grid grid-cols-3 gap-1'>
+                <div className='mt-4 flex flex-wrap gap-2'>
                   {(stamps.results[stampIndex].photos || []).map(
                     (stampPhoto) => {
                       return (

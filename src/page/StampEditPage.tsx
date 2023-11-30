@@ -203,7 +203,7 @@ export const StampPage = () => {
               />
             </div>
             <div
-              className='container relative rounded-t-xl bg-white pb-16 pt-2'
+              className='container relative max-w-md rounded-t-xl bg-white pb-16 pt-2'
               style={{ top: -30 }}
             >
               <article className='prose mt-6'>
@@ -243,7 +243,7 @@ export const StampPage = () => {
                             Your photos
                           </span>
                         </label>
-                        <div className='grid grid-cols-4 gap-4'>
+                        <div className='flex flex-wrap gap-2 '>
                           {formData.stampPhotos.map((photo) => (
                             <div
                               key={photo.photo}
@@ -252,7 +252,7 @@ export const StampPage = () => {
                             >
                               <img
                                 src={photo.photo}
-                                className='h-full w-full object-fill'
+                                className='object-fit h-full w-full'
                               />
                             </div>
                           ))}
