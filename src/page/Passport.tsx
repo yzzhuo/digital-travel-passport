@@ -90,12 +90,11 @@ export default function Passport() {
     setStamps(data)
 
     if (currentStampId) {
-      const stamp = data.results.find((stamp) => stamp.id === currentStampId)
-      if (stamp) {
-        const stampIndex = data.results.findIndex(
-          (stamp) => stamp.id === currentStampId,
-        )
-        setCurrentStampIndex(stampIndex)
+      const index = data.results.findIndex(
+        (stamp) => stamp.id == currentStampId,
+      )
+      if (index >= 0) {
+        setCurrentStampIndex(index)
       }
     }
     setIsLoaded(true)
