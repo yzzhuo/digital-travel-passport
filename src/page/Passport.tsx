@@ -159,7 +159,12 @@ export default function Passport() {
               className='card w-full bg-primary text-primary-content shadow-xl'
             >
               <div className='card-body flex flex-col'>
-                <h2 className='card-title text-3xl'>My Travel Passport</h2>
+                <h2 className='card-title text-center text-3xl'>
+                  {shareUserId
+                    ? `${stamps?.results?.[0].user.display_name}'s `
+                    : 'My '}
+                  Travel Passport
+                </h2>
                 <div className='mt-8 flex-auto'>
                   <img src={Bg} alt='bg' className='background-contain' />
                 </div>
