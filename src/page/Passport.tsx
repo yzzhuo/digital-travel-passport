@@ -150,8 +150,8 @@ export default function Passport() {
     <Wrapper>
       {isLoaded ? (
         <div
-          className='relative flex items-center justify-center p-6 pb-24'
-          style={{ minHeight: '100%', width: '380px', margin: '0 auto' }}
+          className='relative flex max-w-md items-center justify-center p-6 pb-24'
+          style={{ minHeight: '100%', margin: '0 auto' }}
         >
           {stampIndex === -1 && (
             <div
