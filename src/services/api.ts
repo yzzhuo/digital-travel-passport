@@ -39,9 +39,9 @@ export const updateUser = async (accessToken: string, body: Partial<User>) => {
   }
 }
 
-export const fetchPlaceList = async () => {
+export const fetchPlaceList = async (url?: string) => {
   const config: AxiosRequestConfig = {
-    url: `${apiServerUrl}/place`,
+    url: url || `${apiServerUrl}/place`,
     method: 'GET',
     headers: {
       'content-type': 'application/json',

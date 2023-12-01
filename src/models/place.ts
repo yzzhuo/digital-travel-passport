@@ -1,5 +1,7 @@
 export interface PlaceListResult {
   count: number
+  next: string
+  previous: string
   results: Place[]
 }
 
