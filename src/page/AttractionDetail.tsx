@@ -151,7 +151,7 @@ export default function AttractionDetail() {
                 />
                 <div
                   role='tabpanel'
-                  style={{ height: '300px' }}
+                  style={{ height: '300px', minWidth: '300px' }}
                   className='tab-content w-full pt-2'
                 >
                   <Map
