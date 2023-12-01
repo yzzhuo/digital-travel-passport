@@ -83,7 +83,7 @@ export default function AttractionDetail() {
         <Link to='/place'>
           <ArrowLeftIcon className='absolute left-4 top-4 h-5 w-5 text-white' />
         </Link>
-        <img src={placeDetail.photo} className='h-80 w-full' />
+        <img src={placeDetail.photo} className='h-80 w-full object-cover' />
       </div>
     )
   }

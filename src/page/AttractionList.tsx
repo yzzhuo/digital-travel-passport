@@ -296,8 +296,8 @@ export default function AttractionList() {
                   <NotFound> Ops, no place found.</NotFound>
                 </div>
               )}
-          {loading && <PageLoading />}
         </div>
+        {loading && <PageLoading />}
       </div>
     </PageLayout>
   )
