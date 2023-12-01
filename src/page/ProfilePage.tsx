@@ -99,6 +99,10 @@ export const ProfilePage = () => {
               {isEditing ? (
                 <Select
                   placeholder='Select Country'
+                  defaultValue={{
+                    value: formData.country,
+                    label: countryDisplayName,
+                  }}
                   options={countryOptions}
                   onChange={(country: any) =>
                     setFormData({ ...formData, country: country.value })
