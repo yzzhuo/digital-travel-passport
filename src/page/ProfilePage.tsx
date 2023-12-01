@@ -85,9 +85,12 @@ export const ProfilePage = () => {
               {isEditing ? (
                 <input
                   className='input input-bordered w-full'
-                  value={formData.display_name}
+                  defaultValue={userInfo.display_name || user.name}
                   onChange={(e) =>
-                    setFormData({ ...formData, display_name: e.target.value })
+                    setFormData({
+                      ...formData,
+                      display_name: e.target.value || user.name,
+                    })
                   }
                 />
               ) : (
