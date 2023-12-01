@@ -9,7 +9,13 @@ interface Location {
 const AnyReactComponent = ({ lat, lng }: { lat?: number; lng?: number }) => {
   console.log(lat, lng)
   return (
-    <div>
+    <div
+      style={{
+        transform: 'translate(-50%, -50%)',
+        position: 'absolute',
+        textAlign: 'center',
+      }}
+    >
       <MapPinIcon className='h-5 w-5' />
     </div>
   )
