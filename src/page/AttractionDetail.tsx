@@ -90,7 +90,7 @@ export default function AttractionDetail() {
   return (
     <PageLayout>
       {!isLoading && placeDetail ? (
-        <div>
+        <div className='overflow-auto'>
           <div className='relative'>
             <GoBackBtn />
             <div
