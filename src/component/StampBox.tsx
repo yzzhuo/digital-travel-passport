@@ -41,7 +41,7 @@ export const StampBox = ({
         latitude,
         longitude,
         placeDetail?.location_lat,
-        placeDetail?.location_lat,
+        placeDetail?.location_lon,
       )
       if (inDestination) {
         handleStamp()
